@@ -1,0 +1,8 @@
+bantu tambahkan tombol panduan di halaman master/units samakan penataanya seperti kategori produk
+
+
+
+bantu jaga keamanan foto produk biar tidak bisa di searcing di search enggine manapun termasuk google
+soalnya ini untuk khusus admin jadi rahasia perusahaan untuk foto2 produk nya dan foto lainnya sama file lainnya
+apakah bisa?
+tanpa menggunakan S3/cloud storage
