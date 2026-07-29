@@ -1,0 +1,25 @@
+services:
+  app:
+    image: ghcr.io/owner/repository:production
+    container_name: laravel_skeleton_production
+    restart: unless-stopped
+    init: true
+    pull_policy: always
+    mem_limit: 1g
+    cpus: 1.0
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_storage:/app/storage
+    networks:
+      - app-network
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+  app_storage:
+    name: laravel_skeleton_production_storage
+
+networks:
+  app-network:
+    external: true

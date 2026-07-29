@@ -1,0 +1,26 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@iconify-json/tabler": "^1.2.35",
+        "@iconify/tailwind4": "^1.2.3",
+        "@tailwindcss/vite": "^4.3.1",
+        "axios": "^1.18.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "tailwindcss": "^4.3.1",
+        "vite": "^7.0.7"
+    },
+    "dependencies": {
+        "alpinejs": "^3.15.12",
+        "apexcharts": "^5.15.0",
+        "chart.js": "^4.5.1",
+        "flyonui": "^2.4.1",
+        "sweetalert2": "^11.26.25"
+    }
+}

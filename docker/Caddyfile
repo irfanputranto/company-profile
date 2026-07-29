@@ -1,0 +1,18 @@
+{
+	frankenphp
+	admin off
+}
+
+{$SERVER_NAME} {
+	root * /app/public
+	encode zstd br gzip
+	log
+
+	@privateFiles path /.env* /composer.* /package*.json /artisan /vite.config.js /vendor/*
+	respond @privateFiles 404
+
+	@assets path /build/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	php_server
+}

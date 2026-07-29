@@ -1,0 +1,125 @@
+x-app: &app
+  image: ${APP_PRODUCTION_IMAGE:-laravel-skeleton-production:local}
+  env_file:
+    - .env.production
+
+services:
+  migrate:
+    <<: *app
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    init: true
+    restart: "no"
+    environment:
+      CONTAINER_ROLE: migrate
+    command: php artisan migrate --force --no-interaction
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  app:
+    <<: *app
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    init: true
+    restart: unless-stopped
+    environment:
+      CONTAINER_ROLE: app
+      RUN_MIGRATIONS: "false"
+      RUN_SEEDERS: "false"
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - production_storage:/app/storage
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8080/up', false, stream_context_create(['http' => ['header' => 'Host: '.(parse_url(getenv('APP_URL') ?: 'http://localhost', PHP_URL_HOST) ?: 'localhost').'\\r\\n', 'timeout' => 3]])) === false ? 1 : 0);"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  queue:
+    <<: *app
+    init: true
+    restart: unless-stopped
+    environment:
+      CONTAINER_ROLE: worker
+    command: php artisan queue:work --sleep=2 --tries=3 --backoff=3 --timeout=120 --max-time=3600
+    stop_grace_period: 2m
+    volumes:
+      - production_storage:/app/storage
+    depends_on:
+      app:
+        condition: service_healthy
+
+  scheduler:
+    <<: *app
+    init: true
+    restart: unless-stopped
+    environment:
+      CONTAINER_ROLE: scheduler
+    command: php artisan schedule:work
+    stop_grace_period: 30s
+    volumes:
+      - production_storage:/app/storage
+    depends_on:
+      app:
+        condition: service_healthy
+
+  seed:
+    <<: *app
+    profiles: ["tools"]
+    init: true
+    restart: "no"
+    environment:
+      CONTAINER_ROLE: seed
+    command: php artisan db:seed --force --no-interaction
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-skeleton}
+      MYSQL_USER: ${DB_USERNAME:-skeleton}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env.production}
+    volumes:
+      - production_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - production_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  caddy_config:
+  caddy_data:
+  production_mysql:
+  production_redis:
+  production_storage:

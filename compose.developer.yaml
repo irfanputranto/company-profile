@@ -1,0 +1,125 @@
+services:
+  app:
+    image: ${APP_DEVELOPER_IMAGE:-laravel-skeleton-developer:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.developer
+      args:
+        APP_UID: ${HOST_UID:-1000}
+        APP_GID: ${HOST_GID:-1000}
+    init: true
+    env_file:
+      - .env.developer
+    environment:
+      CONTAINER_ROLE: app
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./:/app
+      - developer_vendor:/app/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8080/up') === false ? 1 : 0);"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    tty: true
+
+  node:
+    image: node:22-bookworm-slim
+    init: true
+    working_dir: /app
+    command: sh -c "npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./:/app
+      - developer_node_modules:/app/node_modules
+    depends_on:
+      app:
+        condition: service_healthy
+
+  queue:
+    image: ${APP_DEVELOPER_IMAGE:-laravel-skeleton-developer:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.developer
+      args:
+        APP_UID: ${HOST_UID:-1000}
+        APP_GID: ${HOST_GID:-1000}
+    init: true
+    env_file:
+      - .env.developer
+    environment:
+      CONTAINER_ROLE: worker
+    command: php artisan queue:work --sleep=2 --tries=3 --backoff=3 --timeout=120
+    stop_grace_period: 2m
+    volumes:
+      - ./:/app
+      - developer_vendor:/app/vendor
+    depends_on:
+      app:
+        condition: service_healthy
+
+  scheduler:
+    image: ${APP_DEVELOPER_IMAGE:-laravel-skeleton-developer:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.developer
+      args:
+        APP_UID: ${HOST_UID:-1000}
+        APP_GID: ${HOST_GID:-1000}
+    init: true
+    env_file:
+      - .env.developer
+    environment:
+      CONTAINER_ROLE: scheduler
+    command: php artisan schedule:work
+    stop_grace_period: 30s
+    volumes:
+      - ./:/app
+      - developer_vendor:/app/vendor
+    depends_on:
+      app:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skeleton
+      MYSQL_USER: skeleton
+      MYSQL_PASSWORD: skeleton
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - developer_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - developer_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  developer_mysql:
+  developer_node_modules:
+  developer_redis:
+  developer_vendor:
