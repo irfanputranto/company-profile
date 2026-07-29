@@ -4,6 +4,8 @@
 .env.*
 .env.backup
 !.env.example
+!.env.production
+!.env.development
 !.env.*.example
 .phpactor.json
 .phpunit.result.cache
