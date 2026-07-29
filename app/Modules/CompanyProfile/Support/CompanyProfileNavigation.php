@@ -23,6 +23,8 @@ class CompanyProfileNavigation
                     self::content('skill-categories'),
                     self::content('skills'),
                     self::content('services'),
+                    self::content('features'),
+                    self::content('pricing-plans'),
                     self::content('projects'),
                     self::content('testimonials'),
                     self::content('faqs'),

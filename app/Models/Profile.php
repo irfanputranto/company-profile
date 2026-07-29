@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasContentTranslations;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends AuditableModel
 {
@@ -21,5 +22,59 @@ class Profile extends AuditableModel
             'years_experience' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    /** @return HasMany<Service, $this> */
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    /** @return HasMany<Feature, $this> */
+    public function features(): HasMany
+    {
+        return $this->hasMany(Feature::class);
+    }
+
+    /** @return HasMany<PricingPlan, $this> */
+    public function pricingPlans(): HasMany
+    {
+        return $this->hasMany(PricingPlan::class);
+    }
+
+    /** @return HasMany<Skill, $this> */
+    public function skills(): HasMany
+    {
+        return $this->hasMany(Skill::class);
+    }
+
+    /** @return HasMany<Project, $this> */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    /** @return HasMany<Experience, $this> */
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+    /** @return HasMany<SocialLink, $this> */
+    public function socialLinks(): HasMany
+    {
+        return $this->hasMany(SocialLink::class);
+    }
+
+    /** @return HasMany<Testimonial, $this> */
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
+    /** @return HasMany<Faq, $this> */
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(Faq::class);
     }
 }

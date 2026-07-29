@@ -1,7 +1,8 @@
+@import "tailwindcss";
 @import "./fonts.css";
 @import "./loading-bar.css";
+@import "./bigspring.css";
 @import "../vendor/flatpickr/flatpickr.min.css";
-@import "tailwindcss";
 @plugin "@iconify/tailwind4";
 
 @plugin "flyonui" {

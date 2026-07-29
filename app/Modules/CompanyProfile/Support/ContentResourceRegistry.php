@@ -8,7 +8,9 @@ use App\Models\ContentPage;
 use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Faq;
+use App\Models\Feature;
 use App\Models\Media;
+use App\Models\PricingPlan;
 use App\Models\Profile;
 use App\Models\Project;
 use App\Models\SeoMetadata;
@@ -291,6 +293,52 @@ class ContentResourceRegistry
                 ],
                 slugSource: 'title',
             ),
+            'features' => self::resource(
+                Feature::class,
+                'Keunggulan',
+                'Keunggulan',
+                'tabler--sparkles',
+                ['title', 'slug', 'description'],
+                [
+                    $profile,
+                    self::text('title', 'Judul', ['required', 'string', 'max:255'], list: true),
+                    self::text('slug', 'Slug', ['nullable', 'string', 'max:255'], unique: 'slug'),
+                    self::textarea('description', 'Deskripsi', ['required', 'string', 'max:2000'], list: true),
+                    self::text('icon', 'Nama icon', ['nullable', 'string', 'max:255']),
+                    $sortOrder,
+                    $featured,
+                    $active,
+                ],
+                slugSource: 'title',
+            ),
+            'pricing-plans' => self::resource(
+                PricingPlan::class,
+                'Paket Harga',
+                'Paket harga',
+                'tabler--receipt-2',
+                ['title', 'slug', 'tagline', 'description'],
+                [
+                    $profile,
+                    self::text('title', 'Judul', ['required', 'string', 'max:255'], list: true),
+                    self::text('slug', 'Slug', ['nullable', 'string', 'max:255'], unique: 'slug'),
+                    self::text('tagline', 'Tagline', ['nullable', 'string', 'max:255'], list: true),
+                    self::textarea('description', 'Deskripsi', ['nullable', 'string', 'max:2000']),
+                    self::number('price', 'Harga', ['nullable', 'numeric', 'min:0'], list: true, step: '0.01'),
+                    self::text('currency', 'Mata uang', ['required', 'string', 'size:3']),
+                    self::selectChoices('billing_period', 'Periode harga', [
+                        'project' => 'Per proyek',
+                        'month' => 'Per bulan',
+                        'year' => 'Per tahun',
+                    ], ['required', 'string'], list: true),
+                    self::text('call_to_action_label', 'Label CTA', ['nullable', 'string', 'max:255']),
+                    self::text('call_to_action_url', 'URL CTA', ['nullable', 'string', 'max:2048']),
+                    self::multiselect('feature_ids', 'Keunggulan paket', Feature::class, 'title', 'features'),
+                    $sortOrder,
+                    $featured,
+                    $active,
+                ],
+                slugSource: 'title',
+            ),
             'projects' => self::resource(
                 Project::class,
                 'Proyek',
@@ -442,6 +490,8 @@ class ContentResourceRegistry
                     self::selectChoices('seoable_type', 'Jenis konten', [
                         Profile::class => 'Profil',
                         Service::class => 'Layanan',
+                        Feature::class => 'Keunggulan',
+                        PricingPlan::class => 'Paket harga',
                         Project::class => 'Proyek',
                         Article::class => 'Artikel',
                         ContentPage::class => 'Halaman',

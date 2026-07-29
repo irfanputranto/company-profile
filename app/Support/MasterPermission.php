@@ -17,6 +17,8 @@ class MasterPermission
         'skill_categories',
         'skills',
         'services',
+        'features',
+        'pricing_plans',
         'projects',
         'testimonials',
         'faqs',

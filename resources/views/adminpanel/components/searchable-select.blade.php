@@ -5,6 +5,7 @@
     'detailed' => false,
     'dark' => false,
     'invalid' => false,
+    'multiple' => false,
 ])
 
 @php
@@ -45,9 +46,25 @@
         $configuration['searchWrapperClasses'] = 'sticky top-0 z-10 border-b border-white/10 bg-[#352e3e] px-3 py-3';
         $configuration['searchClasses'] = 'block w-full rounded-lg border border-[#766d80] bg-[#292331] px-3 py-2.5 text-sm text-white outline-none placeholder:text-[#aaa1b2] focus:border-primary focus:ring-2 focus:ring-primary/25';
     }
+
+    if ($multiple) {
+        $configuration['mode'] = 'tags';
+        $configuration['hasSearch'] = false;
+        $configuration['isAddTagOnEnter'] = false;
+        $configuration['isSelectedOptionOnTop'] = true;
+        $configuration['wrapperClasses'] = implode(' ', [
+            'border-base-content/40 bg-base-100 relative flex min-h-11 w-full cursor-text flex-wrap items-center gap-1.5 rounded-field border px-2 py-1.5',
+            'focus-within:border-primary focus-within:ring-primary/20 focus-within:ring-2',
+            $invalid ? 'border-error ring-error/20 ring-2' : '',
+        ]);
+        $configuration['tagsItemClasses'] = 'badge badge-soft badge-primary order-first max-w-full gap-1.5 py-2 pe-1 ps-3 text-sm';
+        $configuration['tagsItemTemplate'] = '<div class="flex min-w-0 items-center gap-1.5"><span class="truncate" data-title></span><button type="button" class="btn btn-circle btn-text btn-xs shrink-0" data-remove aria-label="'.e(__('admin.select.remove')).'"><span class="icon-[tabler--x] size-3.5"></span></button></div>';
+        $configuration['tagsInputClasses'] = 'text-base-content placeholder:text-base-content/40 order-last min-w-32 grow border-0 bg-transparent px-2 py-2 text-sm outline-none';
+    }
 @endphp
 
 <select data-select='{!! json_encode($configuration, JSON_HEX_APOS | JSON_HEX_AMP) !!}'
+    @if ($multiple) multiple @endif
     {{ $attributes->class(['hidden']) }}>
     {{ $slot }}
 </select>

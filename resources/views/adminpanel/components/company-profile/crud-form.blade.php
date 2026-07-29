@@ -39,26 +39,41 @@
                     @if ($isRequired)<span class="text-error">*</span>@endif
                 </label>
 
-                @if (in_array($field['type'], ['select', 'multiselect'], true))
-                    <select id="{{ $name }}" name="{{ $name }}{{ $field['type'] === 'multiselect' ? '[]' : '' }}"
+                @if ($field['type'] === 'multiselect')
+                    <div class="mt-2">
+                        <x-adminpanel::components.searchable-select
+                            id="{{ $name }}"
+                            name="{{ $name }}[]"
+                            :multiple="true"
+                            :invalid="$errors->has($name) || $errors->has($name.'.*')"
+                            :placeholder="__('admin.crud.multiselect_placeholder', ['resource' => $field['label']])"
+                            :search-placeholder="__('admin.crud.multiselect_search', ['resource' => $field['label']])"
+                            :no-results-text="__('admin.select.no_results')"
+                            :required="$isRequired">
+                            @foreach ($field['options'] ?? [] as $optionValue => $optionLabel)
+                                <option value="{{ $optionValue }}"
+                                    @selected(in_array((string) $optionValue, array_map('strval', (array) $value), true))>
+                                    {{ $optionLabel }}
+                                </option>
+                            @endforeach
+                        </x-adminpanel::components.searchable-select>
+                    </div>
+                    <p class="text-base-content/50 mt-1.5 flex items-center gap-1.5 text-xs">
+                        <span class="icon-[tabler--search] size-3.5 shrink-0"></span>
+                        {{ __('admin.crud.multiselect_hint') }}
+                    </p>
+                @elseif ($field['type'] === 'select')
+                    <select id="{{ $name }}" name="{{ $name }}"
                         class="select mt-2 w-full @error($name) select-error @enderror"
-                        @if ($field['type'] === 'multiselect') multiple size="6" @endif
                         @required($isRequired)>
-                        @if ($field['type'] === 'select')
-                            <option value="">{{ __('admin.crud.select', ['resource' => $field['label']]) }}</option>
-                        @endif
+                        <option value="">{{ __('admin.crud.select', ['resource' => $field['label']]) }}</option>
                         @foreach ($field['options'] ?? [] as $optionValue => $optionLabel)
                             <option value="{{ $optionValue }}"
-                                @selected($field['type'] === 'multiselect'
-                                    ? in_array((string) $optionValue, array_map('strval', (array) $value), true)
-                                    : (string) $value === (string) $optionValue)>
+                                @selected((string) $value === (string) $optionValue)>
                                 {{ $optionLabel }}
                             </option>
                         @endforeach
                     </select>
-                    @if ($field['type'] === 'multiselect')
-                        <p class="text-base-content/50 mt-1.5 text-xs">{{ __('admin.crud.multiselect_hint') }}</p>
-                    @endif
                 @elseif (in_array($field['type'], ['textarea', 'json'], true))
                     <textarea id="{{ $name }}" name="{{ $name }}" rows="{{ $field['type'] === 'json' ? 7 : 5 }}"
                         class="textarea mt-2 w-full font-{{ $field['type'] === 'json' ? 'mono' : 'sans' }} @error($name) textarea-error @enderror"
@@ -72,6 +87,7 @@
             @endif
 
             @error($name)<p class="text-error mt-1.5 text-sm">{{ $message }}</p>@enderror
+            @error($name.'.*')<p class="text-error mt-1.5 text-sm">{{ $message }}</p>@enderror
         </div>
     @endforeach
 </div>

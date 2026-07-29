@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasContentTranslations;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Skill extends AuditableModel
 {
@@ -24,5 +25,11 @@ class Skill extends AuditableModel
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
         ];
+    }
+
+    /** @return BelongsTo<SkillCategory, $this> */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(SkillCategory::class, 'skill_category_id');
     }
 }

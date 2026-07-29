@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             LanguageSeeder::class,
             PersonalProfileSeeder::class,
+            FeatureSeeder::class,
+            PricingPlanSeeder::class,
             PersonalProfileTranslationSeeder::class,
         ]);
     }

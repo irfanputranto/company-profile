@@ -22,10 +22,12 @@ class AggregateVisits extends Command
             $dates = $this->datesToAggregate();
 
             foreach ($dates as $date) {
-                $this->aggregateDay($date);
+                $this->aggregatePeriod('day', $date->startOfDay(), $date->endOfDay());
             }
 
-            $this->aggregateParentPeriods($dates);
+            if (is_string($this->option('date')) && $this->option('date') !== '') {
+                $this->aggregateParentPeriods($dates);
+            }
         } catch (Throwable $exception) {
             report($exception);
             $this->error($exception->getMessage());
@@ -58,23 +60,26 @@ class AggregateVisits extends Command
         return [$today->subDay(), $today];
     }
 
-    private function aggregateDay(CarbonImmutable $date): void
-    {
+    private function aggregatePeriod(
+        string $periodType,
+        CarbonImmutable $periodStart,
+        CarbonImmutable $periodEnd,
+    ): void {
         $rows = DB::table('page_visits')
             ->select(['scope_type', 'scope_id'])
             ->selectRaw('COUNT(*) as page_views')
             ->selectRaw('COUNT(DISTINCT visitor_hash) as unique_visitors')
             ->selectRaw('COUNT(DISTINCT session_hash) as sessions')
             ->where('is_bot', false)
-            ->where('occurred_at', '>=', $date->startOfDay())
-            ->where('occurred_at', '<', $date->addDay()->startOfDay())
+            ->where('occurred_at', '>=', $periodStart->startOfDay())
+            ->where('occurred_at', '<', $periodEnd->addDay()->startOfDay())
             ->groupBy(['scope_type', 'scope_id'])
             ->get();
 
         foreach ($rows as $row) {
             $this->upsertAggregate(
-                periodType: 'day',
-                periodStart: $date,
+                periodType: $periodType,
+                periodStart: $periodStart,
                 scopeType: $row->scope_type,
                 scopeId: (int) $row->scope_id,
                 pageViews: (int) $row->page_views,
@@ -96,30 +101,11 @@ class AggregateVisits extends Command
             ->unique(fn (array $period): string => "{$period['type']}:{$period['start']->format('Y-m-d')}");
 
         foreach ($periods as $period) {
-            $rows = DB::table('visit_aggregates')
-                ->select(['scope_type', 'scope_id'])
-                ->selectRaw('SUM(page_views) as page_views')
-                ->selectRaw('SUM(unique_visitors) as unique_visitors')
-                ->selectRaw('SUM(sessions) as sessions')
-                ->where('period_type', 'day')
-                ->whereBetween('period_start', [
-                    $period['start']->format('Y-m-d'),
-                    $period['end']->format('Y-m-d'),
-                ])
-                ->groupBy(['scope_type', 'scope_id'])
-                ->get();
-
-            foreach ($rows as $row) {
-                $this->upsertAggregate(
-                    periodType: $period['type'],
-                    periodStart: $period['start'],
-                    scopeType: $row->scope_type,
-                    scopeId: (int) $row->scope_id,
-                    pageViews: (int) $row->page_views,
-                    uniqueVisitors: (int) $row->unique_visitors,
-                    sessions: (int) $row->sessions,
-                );
-            }
+            $this->aggregatePeriod(
+                periodType: $period['type'],
+                periodStart: $period['start'],
+                periodEnd: $period['end'],
+            );
         }
     }
 

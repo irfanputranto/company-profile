@@ -1,73 +1,12 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    dir="{{ app('App\\Modules\\CompanyProfile\\Services\\LanguageResolver')->activeLanguages()->firstWhere('code', app()->getLocale())?->direction ?? 'ltr' }}"
-    data-theme="{{ config('theme.default') }}"
-    data-theme-default="{{ config('theme.default') }}"
-    data-theme-options="{{ implode(',', array_keys(config('theme.themes'))) }}"
-    data-theme-storage-key="{{ config('theme.storage_key') }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ $profile?->translated('short_bio') ?? __('company-profile.public.description') }}">
-    <title>{{ $profile?->public_name ?? config('app.name') }} | {{ $profile?->translated('headline') ?? __('company-profile.public.subtitle') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
-    <div class="min-h-screen bg-[radial-gradient(circle_at_15%_15%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_85%_25%,rgba(139,92,246,0.15),transparent_26%)]">
-        <header class="mx-auto flex max-w-6xl items-center justify-between px-5 py-6 sm:px-8">
-            <a href="{{ route('home') }}" class="flex items-center gap-3">
-                <span class="flex size-11 items-center justify-center rounded-xl bg-cyan-400 text-slate-950"><span class="icon-[tabler--template] size-6"></span></span>
-                <div><p class="font-bold text-white">{{ config('app.name') }}</p><p class="text-xs text-slate-400">{{ __('company-profile.public.subtitle') }}</p></div>
-            </a>
-            <div class="flex items-center gap-3">
-                <x-language-switcher dark />
-                @auth
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary rounded-full px-6">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-primary rounded-full px-6">{{ __('company-profile.public.login') }}</a>
-                @endauth
-            </div>
-        </header>
-
-        <main>
-            <section class="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:py-24">
-                <div>
-                    <span class="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-medium text-cyan-200">{{ $profile?->public_name ?? __('company-profile.public.eyebrow') }}</span>
-                    <h1 class="mt-6 text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">{{ $profile?->translated('headline') ?? __('company-profile.public.heading') }}</h1>
-                    <p class="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">{{ $profile?->translated('short_bio') ?? __('company-profile.public.description') }}</p>
-                    <div class="mt-8 flex flex-wrap gap-3">
-                        <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="btn btn-primary rounded-full px-7">{{ __('company-profile.public.start') }}</a>
-                        <a href="#features" class="btn btn-outline rounded-full border-white/20 px-7 text-white hover:border-cyan-300">{{ __('company-profile.public.features') }}</a>
-                    </div>
-                </div>
-                <div class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-cyan-950/40 backdrop-blur sm:p-8">
-                    <div class="flex items-center gap-3 border-b border-white/10 pb-5"><span class="size-3 rounded-full bg-rose-400"></span><span class="size-3 rounded-full bg-amber-300"></span><span class="size-3 rounded-full bg-emerald-400"></span><span class="ml-2 text-sm text-slate-400">skeleton/app</span></div>
-                    <div class="mt-6 space-y-4">
-                        @foreach (['Authentication & profile', 'User, role & permission', 'Private file uploads', 'Activity logging', 'Security headers & throttling', 'Import & export foundation'] as $feature)
-                            <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3"><span class="icon-[tabler--circle-check-filled] size-5 text-emerald-400"></span><span>{{ $feature }}</span></div>
-                        @endforeach
-                    </div>
-                </div>
-            </section>
-
-            <section id="features" class="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
-                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    @forelse ($services as $service)
-                        <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
-                            <span class="icon-[tabler--server] size-7 text-cyan-300"></span>
-                            <h2 class="mt-4 text-lg font-bold text-white">{{ $service->translated('title') }}</h2>
-                            <p class="mt-2 text-sm leading-6 text-slate-400">{{ $service->translated('summary') }}</p>
-                        </article>
-                    @empty
-                        @foreach (__('company-profile.public.feature_items') as [$icon, $title, $description])
-                            <article class="rounded-2xl border border-white/10 bg-white/5 p-6"><span class="{{ $icon }} size-7 text-cyan-300"></span><h2 class="mt-4 text-lg font-bold text-white">{{ $title }}</h2><p class="mt-2 text-sm leading-6 text-slate-400">{{ $description }}</p></article>
-                        @endforeach
-                    @endforelse
-                </div>
-            </section>
-        </main>
-
-        <footer class="border-t border-white/10 px-5 py-6 text-center text-sm text-slate-500">© {{ date('Y') }} {{ config('app.name') }}.</footer>
-    </div>
-</body>
-</html>
+<x-public.layout :profile="$profile" :services="$services" :social-links="$socialLinks" active-page="home">
+    <x-public.hero :profile="$profile" :services="$services" :projects="$projects" />
+    <x-public.features :features="$features" />
+    <x-public.services :services="$services" :profile="$profile" />
+    <x-public.projects :projects="$projects" />
+    <x-public.experience :experiences="$experiences" />
+    <x-public.skills :skills="$skills" />
+    <x-public.testimonials :testimonials="$testimonials" />
+    <x-public.articles :articles="$articles" />
+    <x-public.faq :faqs="$faqs" />
+    <x-public.cta :profile="$profile" />
+</x-public.layout>

@@ -229,4 +229,152 @@ Alpine.data('modalState', (initiallyOpen = false) => ({
     },
 }));
 
+Alpine.data('bigspringCarousel', (slideCount = 1, interval = 5000) => ({
+    active: 0,
+    timer: null,
+    init() {
+        if (slideCount <= 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        this.timer = window.setInterval(() => {
+            this.active = (this.active + 1) % slideCount;
+        }, interval);
+    },
+    goTo(index) {
+        this.active = index;
+    },
+    destroy() {
+        if (this.timer) {
+            window.clearInterval(this.timer);
+        }
+    },
+}));
+
+const trackPublicAnalytics = (scopeType, eventName) => {
+    const endpoint = document.querySelector('meta[name="analytics-endpoint"]')?.content;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    if (!endpoint || !csrfToken || !scopeType || !eventName) {
+        return;
+    }
+
+    const payload = new FormData();
+    payload.append('_token', csrfToken);
+    payload.append('scope_type', scopeType);
+    payload.append('event', eventName);
+
+    if (navigator.sendBeacon?.(endpoint, payload)) {
+        return;
+    }
+
+    fetch(endpoint, {
+        method: 'POST',
+        body: payload,
+        credentials: 'same-origin',
+        keepalive: true,
+        headers: {
+            Accept: 'application/json',
+        },
+    }).catch(() => {
+        // Analytics must never interrupt public navigation.
+    });
+};
+
+document.addEventListener('click', event => {
+    const analyticsTarget = event.target.closest('[data-analytics-scope][data-analytics-event]');
+
+    if (!analyticsTarget) {
+        return;
+    }
+
+    trackPublicAnalytics(
+        analyticsTarget.dataset.analyticsScope,
+        analyticsTarget.dataset.analyticsEvent,
+    );
+});
+
+Alpine.data('publicNavigation', (initialPage = 'home') => ({
+    active: initialPage,
+    open: false,
+    observer: null,
+    trackedSections: new Set(),
+    init() {
+        if (initialPage !== 'home' || !('IntersectionObserver' in window)) {
+            return;
+        }
+
+        this.$nextTick(() => {
+            const sections = document.querySelectorAll('[data-nav-section]');
+
+            this.observer = new IntersectionObserver(entries => {
+                const visibleSection = entries
+                    .filter(entry => entry.isIntersecting)
+                    .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+
+                if (visibleSection) {
+                    this.active = visibleSection.target.dataset.navSection;
+                    this.trackSection(this.active);
+                }
+            }, {
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: [0, 0.2, 0.5],
+            });
+
+            sections.forEach(section => this.observer.observe(section));
+        });
+    },
+    activate(page) {
+        this.active = page;
+    },
+    trackSection(section) {
+        if (this.trackedSections.has(section)) {
+            return;
+        }
+
+        this.trackedSections.add(section);
+        trackPublicAnalytics('section', section);
+    },
+    destroy() {
+        this.observer?.disconnect();
+    },
+}));
+
+const initializeBigspringReveals = () => {
+    const elements = document.querySelectorAll('.bigspring-home [data-reveal]');
+
+    if (elements.length === 0) {
+        return;
+    }
+
+    document.body.classList.add('reveal-ready');
+
+    if (
+        !('IntersectionObserver' in window)
+        || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+        elements.forEach(element => element.classList.add('is-visible'));
+
+        return;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                return;
+            }
+
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.12,
+    });
+
+    elements.forEach(element => observer.observe(element));
+};
+
+initializeBigspringReveals();
+
 Alpine.start();

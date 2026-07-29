@@ -18,10 +18,53 @@ class ContentController extends BaseWebCrud
     /** @var array<string, list<int>> */
     private array $relationValues = [];
 
-    public function __construct(Request $request)
+    public function index(Request $request): mixed
+    {
+        $this->configure($request);
+
+        return parent::index($request);
+    }
+
+    public function create(): mixed
+    {
+        $this->configure(request());
+
+        return parent::create();
+    }
+
+    public function store(Request $request): mixed
+    {
+        $this->configure($request);
+
+        return parent::store($request);
+    }
+
+    public function editRecord(Request $request, string $resource, int $record): mixed
+    {
+        $this->configure($request);
+
+        return parent::edit($record);
+    }
+
+    public function updateRecord(Request $request, string $resource, int $record): mixed
+    {
+        $this->configure($request);
+
+        return parent::update($request, $record);
+    }
+
+    public function destroyRecord(Request $request, string $resource, int $record): mixed
+    {
+        $this->configure($request);
+
+        return parent::destroy($request, $record);
+    }
+
+    private function configure(Request $request): void
     {
         $this->resourceKey = (string) $request->route('resource');
         $this->definition = ContentResourceRegistry::get($this->resourceKey);
+        $this->relationValues = [];
         $permissionResource = str($this->resourceKey)->replace('-', '_')->toString();
 
         $this->model = $this->definition['model'];
@@ -48,21 +91,6 @@ class ContentController extends BaseWebCrud
         $this->abilityPolicyDelete = "delete_{$permissionResource}";
         $this->enableBulkDelete = false;
         $this->lockRelationParam = true;
-    }
-
-    public function editRecord(string $resource, int $record): mixed
-    {
-        return parent::edit($record);
-    }
-
-    public function updateRecord(Request $request, string $resource, int $record): mixed
-    {
-        return parent::update($request, $record);
-    }
-
-    public function destroyRecord(Request $request, string $resource, int $record): mixed
-    {
-        return parent::destroy($request, $record);
     }
 
     /** @param array<string, mixed> $data
@@ -140,9 +168,9 @@ class ContentController extends BaseWebCrud
     {
         foreach ($this->relationValues as $relationName => $ids) {
             $relation = $this->row->{$relationName}();
-            $oldIds = $relation->pluck($relation->getRelated()->getQualifiedKeyName())->map(fn ($id): int => (int) $id)->sort()->values()->all();
+            $oldIds = $relation->allRelatedIds()->map(fn ($id): int => (int) $id)->sort()->values()->all();
             $relation->sync($ids);
-            $newIds = $relation->pluck($relation->getRelated()->getQualifiedKeyName())->map(fn ($id): int => (int) $id)->sort()->values()->all();
+            $newIds = $this->row->{$relationName}()->allRelatedIds()->map(fn ($id): int => (int) $id)->sort()->values()->all();
 
             if ($oldIds === $newIds) {
                 continue;

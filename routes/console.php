@@ -8,7 +8,10 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('visits:aggregate')
-    ->hourly()
-    ->withoutOverlapping(55)
-    ->onOneServer();
+$visitAggregation = Schedule::command('visits:aggregate')->hourly();
+
+if (app()->environment('production')) {
+    $visitAggregation
+        ->withoutOverlapping(55)
+        ->onOneServer();
+}

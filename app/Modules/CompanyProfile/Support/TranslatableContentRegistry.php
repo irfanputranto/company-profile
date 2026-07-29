@@ -13,6 +13,8 @@ class TranslatableContentRegistry
         'skill-categories' => ['name'],
         'skills' => ['name'],
         'services' => ['title', 'summary', 'content', 'call_to_action_label'],
+        'features' => ['title', 'description'],
+        'pricing-plans' => ['title', 'tagline', 'description', 'call_to_action_label'],
         'projects' => ['title', 'summary', 'content'],
         'testimonials' => ['client_role', 'quote'],
         'faqs' => ['question', 'answer'],

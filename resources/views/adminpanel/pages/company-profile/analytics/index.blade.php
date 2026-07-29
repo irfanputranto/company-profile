@@ -33,6 +33,48 @@
         @endforeach
     </section>
 
+    <section class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        @foreach ([
+            ['title' => __('admin.analytics.menu_activity'), 'items' => $menuStats, 'icon' => 'icon-[tabler--click]'],
+            ['title' => __('admin.analytics.section_activity'), 'items' => $sectionStats, 'icon' => 'icon-[tabler--viewport-wide]'],
+        ] as $eventGroup)
+            <article class="card overflow-hidden shadow-md">
+                <header class="border-base-content/10 flex items-center gap-3 border-b px-5 py-4">
+                    <span class="bg-primary/10 text-primary flex size-9 items-center justify-center rounded-lg">
+                        <span class="{{ $eventGroup['icon'] }} size-5"></span>
+                    </span>
+                    <h2 class="font-semibold">{{ $eventGroup['title'] }}</h2>
+                </header>
+                <x-adminpanel::components.responsive-table>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{{ __('admin.analytics.event') }}</th>
+                                <th class="text-end">{{ __('admin.analytics.interactions') }}</th>
+                                <th class="text-end">{{ __('admin.analytics.unique_visitors') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($eventGroup['items'] as $event)
+                                <tr>
+                                    <td class="font-medium">{{ $event['label'] }}</td>
+                                    <td class="text-end">{{ \Illuminate\Support\Number::format($event['page_views']) }}</td>
+                                    <td class="text-end">{{ \Illuminate\Support\Number::format($event['unique_visitors']) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-base-content/55 py-10 text-center">
+                                        {{ __('admin.analytics.no_interactions') }}
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </x-adminpanel::components.responsive-table>
+            </article>
+        @endforeach
+    </section>
+
     <section class="card shadow-base-300/10 mt-6 overflow-hidden shadow-md">
         <x-adminpanel::components.responsive-table>
             <table class="table min-w-[700px]">

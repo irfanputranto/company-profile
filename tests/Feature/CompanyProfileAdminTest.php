@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Article;
+use App\Models\Feature;
 use App\Models\Media;
+use App\Models\PricingPlan;
 use App\Models\Profile;
 use App\Models\Service;
 use App\Models\Tag;
@@ -24,6 +26,8 @@ beforeEach(function (): void {
     ]);
     grantMasterPermissions($this->administrator, 'profiles');
     grantMasterPermissions($this->administrator, 'services');
+    grantMasterPermissions($this->administrator, 'features');
+    grantMasterPermissions($this->administrator, 'pricing_plans');
     grantMasterPermissions($this->administrator, 'articles');
     grantMasterPermissions($this->administrator, 'media');
     $this->administrator->givePermissionTo(Permission::findOrCreate('view_analytics', 'web'));
@@ -151,6 +155,45 @@ it('membuat artikel dengan slug dan penulis otomatis', function () {
         ->and($article->tags)->toHaveCount(1)
         ->and(Activity::query()->whereMorphedTo('subject', $article)->where('event', 'updated')->exists())
         ->toBeTrue();
+});
+
+it('mengelola paket harga dan fitur melalui reusable crud', function () {
+    $this->post(route('company-profile.content.store', ['resource' => 'features']), [
+        'profile_id' => $this->profile->id,
+        'title' => 'Konsultasi kebutuhan',
+        'slug' => '',
+        'description' => 'Memetakan kebutuhan dan prioritas bisnis.',
+        'icon' => 'messages',
+        'sort_order' => 1,
+        'is_featured' => 1,
+        'is_active' => 1,
+    ])->assertRedirect();
+
+    $feature = Feature::query()->firstOrFail();
+
+    $this->post(route('company-profile.content.store', ['resource' => 'pricing-plans']), [
+        'profile_id' => $this->profile->id,
+        'title' => 'Professional',
+        'slug' => '',
+        'tagline' => 'Untuk bisnis yang siap berkembang',
+        'description' => 'Paket pengembangan aplikasi custom.',
+        'price' => 7500000,
+        'currency' => 'IDR',
+        'billing_period' => 'project',
+        'call_to_action_label' => 'Konsultasi sekarang',
+        'call_to_action_url' => 'mailto:irfan@example.test',
+        'feature_ids' => [$feature->id],
+        'sort_order' => 2,
+        'is_featured' => 1,
+        'is_active' => 1,
+    ])->assertSessionHasNoErrors()->assertRedirect();
+
+    $pricingPlan = PricingPlan::query()->firstOrFail();
+
+    expect($pricingPlan->slug)->toBe('professional')
+        ->and($pricingPlan->features)->toHaveCount(1)
+        ->and($pricingPlan->created_by)->toBe($this->administrator->id)
+        ->and(Activity::query()->whereMorphedTo('subject', $pricingPlan)->exists())->toBeTrue();
 });
 
 it('menolak akses pengguna tanpa permission resource', function () {

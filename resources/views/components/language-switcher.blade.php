@@ -10,27 +10,16 @@
         <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-52 p-2" role="menu">
             @foreach ($languages as $language)
                 <li>
-                    @if (request()->routeIs('company-profile.*'))
-                        <form action="{{ route('locale.switch', $language) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item flex w-full items-center justify-between gap-3"
-                                aria-current="{{ app()->getLocale() === $language->code ? 'true' : 'false' }}">
-                                <span>{{ $language->native_name }}</span>
-                                @if (app()->getLocale() === $language->code)
-                                    <span class="icon-[tabler--check] text-primary size-4"></span>
-                                @endif
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('localized-home', $language) }}"
-                            class="dropdown-item flex items-center justify-between gap-3"
-                            hreflang="{{ $language->code }}" lang="{{ $language->code }}">
+                    <form action="{{ route('locale.switch', $language) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="dropdown-item flex w-full items-center justify-between gap-3"
+                            aria-current="{{ app()->getLocale() === $language->code ? 'true' : 'false' }}">
                             <span>{{ $language->native_name }}</span>
                             @if (app()->getLocale() === $language->code)
                                 <span class="icon-[tabler--check] text-primary size-4"></span>
                             @endif
-                        </a>
-                    @endif
+                        </button>
+                    </form>
                 </li>
             @endforeach
         </ul>
