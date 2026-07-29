@@ -5,12 +5,12 @@
         <thead>
             <tr>
                 <th class="w-16">No.</th>
-                <th class="min-w-80">Permission</th>
+                <th class="min-w-80">{{ __('admin.permissions.title') }}</th>
                 <th class="w-32">Guard</th>
-                <th class="w-36 text-center">Role</th>
-                <th class="w-36 text-center">Pengguna</th>
-                <th class="w-36">Jenis</th>
-                <th class="sticky end-0 w-28 bg-base-100 text-end">Aksi</th>
+                <th class="w-36 text-center">{{ __('admin.permissions.role_count') }}</th>
+                <th class="w-36 text-center">{{ __('admin.permissions.user_count') }}</th>
+                <th class="w-36">{{ __('admin.permissions.kind') }}</th>
+                <th class="sticky end-0 w-28 bg-base-100 text-end">{{ __('admin.common.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -35,31 +35,31 @@
                     <td><span class="badge badge-neutral badge-soft">{{ $permission->guard_name }}</span></td>
                     <td class="text-center"><span class="font-semibold">{{ $permission->roles_count }}</span></td>
                     <td class="text-center"><span class="font-semibold">{{ $permission->users_count }}</span></td>
-                    <td><span class="badge badge-sm badge-soft {{ $isSystem ? 'badge-primary' : 'badge-neutral' }}">{{ $isSystem ? 'Sistem' : 'Tambahan' }}</span></td>
+                    <td><span class="badge badge-sm badge-soft {{ $isSystem ? 'badge-primary' : 'badge-neutral' }}">{{ $isSystem ? __('admin.common.system') : __('admin.common.additional') }}</span></td>
                     <td class="sticky end-0 bg-base-100">
                         <div class="flex justify-end gap-1">
                             @if ($isSystem || $isAssigned)
                                 <span class="btn btn-square btn-text btn-sm cursor-default text-base-content/30"
-                                    title="Permission yang digunakan dikunci">
+                                    title="{{ __('admin.permissions.locked') }}">
                                     <span class="icon-[tabler--lock] size-5"></span>
                                 </span>
                             @else
                                 @can('update_permissions')
                                 <a href="{{ route('master.permissions.edit', $permission->id) }}"
-                                    class="btn btn-square btn-text btn-sm" title="Edit permission" aria-label="Edit permission {{ $permission->name }}">
+                                    class="btn btn-square btn-text btn-sm" title="{{ __('admin.permissions.edit_action') }}" aria-label="{{ __('admin.permissions.edit_action') }} {{ $permission->name }}">
                                     <span class="icon-[tabler--edit] size-5"></span>
                                 </a>
                                 @endcan
                                 @can('delete_permissions')
                                 <x-adminpanel::components.confirm-delete :action="route('master.permissions.destroy', $permission->id)"
-                                    :name="$permission->name" title="Hapus permission?" />
+                                    :name="$permission->name" :title="__('admin.permissions.delete_title')" />
                                 @endcan
                             @endif
                         </div>
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="py-14 text-center"><span class="icon-[tabler--shield-lock] text-base-content/30 mx-auto size-10"></span><p class="mt-3 font-medium">Data permission belum tersedia</p><p class="text-base-content/50 mt-1 text-sm">Tambahkan permission untuk memulai.</p></td></tr>
+                <tr><td colspan="7" class="py-14 text-center"><span class="icon-[tabler--shield-lock] text-base-content/30 mx-auto size-10"></span><p class="mt-3 font-medium">{{ __('admin.permissions.empty') }}</p><p class="text-base-content/50 mt-1 text-sm">{{ __('admin.permissions.empty_description') }}</p></td></tr>
             @endforelse
         </tbody>
     </table>

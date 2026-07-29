@@ -23,16 +23,16 @@
             <div class="flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
                     <span class="icon-[tabler--filter] text-primary size-5"></span>
-                    <h2 class="text-base-content text-sm font-semibold">Filter Data</h2>
+                    <h2 class="text-base-content text-sm font-semibold">{{ __('admin.filters.title') }}</h2>
                     @if ($activeFilterCount > 0)
-                        <span class="badge badge-primary badge-sm badge-soft">{{ $activeFilterCount }} aktif</span>
+                        <span class="badge badge-primary badge-sm badge-soft">{{ __('admin.filters.active', ['count' => $activeFilterCount]) }}</span>
                     @endif
                 </div>
 
                 @if ($activeFilterCount > 0)
                     <a href="{{ $resetUrl }}" class="btn btn-text btn-sm text-error">
                         <span class="icon-[tabler--filter-off] size-4.5"></span>
-                        Reset filter
+                        {{ __('admin.filters.reset') }}
                     </a>
                 @endif
             </div>
@@ -47,9 +47,9 @@
                                 </label>
                                 <x-adminpanel::components.searchable-select name="{{ $filter['name'] }}"
                                     id="filter_{{ $loop->index }}_{{ $filter['name'] }}"
-                                    :placeholder="$filter['placeholder'] ?? 'Semua'"
-                                    search-placeholder="Cari pilihan..." @change="applyFilters">
-                                    <option value="">{{ $filter['placeholder'] ?? 'Semua' }}</option>
+                                    :placeholder="$filter['placeholder'] ?? __('admin.filters.all')"
+                                    :search-placeholder="__('admin.filters.search_options')" @change="applyFilters">
+                                    <option value="">{{ $filter['placeholder'] ?? __('admin.filters.all') }}</option>
                                     @foreach ($filter['options'] ?? [] as $optionValue => $optionLabel)
                                         <option value="{{ $optionValue }}" @selected((string) ($filter['value'] ?? '') === (string) $optionValue)>
                                             {{ $optionLabel }}
@@ -74,7 +74,7 @@
                                 </label>
                                 <input type="text" name="{{ $filter['name'] }}" value="{{ $filter['value'] ?? '' }}"
                                     id="filter_{{ $loop->index }}_{{ $filter['name'] }}"
-                                    class="input w-full" placeholder="{{ $filter['placeholder'] ?? 'Masukkan nilai' }}"
+                                    class="input w-full" placeholder="{{ $filter['placeholder'] ?? __('admin.filters.enter_value') }}"
                                     @input.debounce.500ms="applyFilters">
                         @endswitch
                     </div>

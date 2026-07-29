@@ -3,7 +3,7 @@
          <p class="text-base-content text-center">
              &copy;{{ date('Y') }}
              <a href="https://flyonui.com/" class="text-primary">Naf Tech</a>
-             , Made With ❤️ for a better web.
+             , {{ __('admin.footer.tagline') }}
          </p>
          {{-- <div class="justify-enter flex items-center gap-4 max-sm:flex-col">
              <a href="https://flyonui.com/templates" class="link link-primary link-animated font-normal"

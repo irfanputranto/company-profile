@@ -9,7 +9,7 @@
 <meta name="keywords" content="{{ config('app.keywords', 'Laravel, application, skeleton') }}" />
 <meta name="author" content="{{ config('app.author', 'Laravel Skeleton') }}" />
 <meta name="canonical" content="{{ config('app.url') }}" />
-<meta name="language" content="{{ config('app.locale', 'id') }}" />
+<meta name="language" content="{{ app()->getLocale() }}" />
 <meta name="theme-color" content="{{ config('app.theme', '#2f2838') }}" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="csrf-token" content="{{ csrf_token() }}" />

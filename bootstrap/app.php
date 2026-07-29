@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\ApplyLocale;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrackPageVisit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -21,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::middleware('web')
                 ->group(app_path('Modules/System/Routes/web.php'));
+
+            Route::middleware('web')
+                ->group(app_path('Modules/CompanyProfile/Routes/web.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
@@ -29,6 +34,10 @@ return Application::configure(basePath: dirname(__DIR__))
             subdomains: false,
         );
         $middleware->append(SecurityHeaders::class);
+        $middleware->appendToGroup('web', [
+            ApplyLocale::class,
+            TrackPageVisit::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->dontReportDuplicates();

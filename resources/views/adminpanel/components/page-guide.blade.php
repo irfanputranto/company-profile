@@ -7,11 +7,11 @@
     :model="$model"
     :title="$guide['title']"
     :description="$guide['description']"
-    :eyebrow="$guide['eyebrow'] ?? 'Panduan Pengguna'"
+    :eyebrow="$guide['eyebrow'] ?? __('admin.guide.eyebrow')"
     :icon="$guide['icon'] ?? 'icon-[tabler--help-circle]'"
     title-id="global-page-guide-title"
     dialog-id="global-page-guide-dialog"
-    confirm-label="Tutup Panduan"
+    :confirm-label="__('admin.guide.close')"
 >
     <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <section aria-labelledby="page-guide-steps-title">
@@ -20,8 +20,8 @@
                     <span class="icon-[tabler--route] size-5" aria-hidden="true"></span>
                 </span>
                 <div>
-                    <h3 id="page-guide-steps-title" class="text-base-content text-lg font-semibold">Cara menggunakan halaman ini</h3>
-                    <p class="text-base-content/60 mt-1 text-sm leading-6">Ikuti langkah berikut secara berurutan. Tombol yang tidak muncul berarti akun Anda belum memiliki izin untuk tindakan tersebut.</p>
+                    <h3 id="page-guide-steps-title" class="text-base-content text-lg font-semibold">{{ __('admin.guide.usage_title') }}</h3>
+                    <p class="text-base-content/60 mt-1 text-sm leading-6">{{ __('admin.guide.usage_description') }}</p>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                 <section class="border-info/20 bg-info/5 rounded-2xl border p-4" aria-labelledby="page-guide-tips-title">
                     <div class="flex items-center gap-2 text-info">
                         <span class="icon-[tabler--bulb] size-5" aria-hidden="true"></span>
-                        <h3 id="page-guide-tips-title" class="font-semibold">Tips untuk pengguna baru</h3>
+                        <h3 id="page-guide-tips-title" class="font-semibold">{{ __('admin.guide.tips_title') }}</h3>
                     </div>
                     <ul class="text-base-content/70 mt-3 space-y-2 text-sm leading-6">
                         @foreach ($guide['tips'] as $tip)
@@ -62,7 +62,7 @@
                 <section class="border-warning/30 bg-warning/10 rounded-2xl border p-4" aria-labelledby="page-guide-warning-title">
                     <div class="flex items-center gap-2 text-warning">
                         <span class="icon-[tabler--alert-triangle] size-5" aria-hidden="true"></span>
-                        <h3 id="page-guide-warning-title" class="font-semibold">Perlu diperhatikan</h3>
+                        <h3 id="page-guide-warning-title" class="font-semibold">{{ __('admin.guide.warning_title') }}</h3>
                     </div>
                     <p class="text-base-content/70 mt-2 text-sm leading-6">{{ $guide['warning'] }}</p>
                 </section>
@@ -71,9 +71,9 @@
             <section class="border-base-content/10 rounded-2xl border p-4">
                 <div class="flex items-center gap-2">
                     <span class="icon-[tabler--lifebuoy] text-primary size-5" aria-hidden="true"></span>
-                    <h3 class="font-semibold">Jika mengalami kendala</h3>
+                    <h3 class="font-semibold">{{ __('admin.guide.help_title') }}</h3>
                 </div>
-                <p class="text-base-content/65 mt-2 text-sm leading-6">Baca pesan merah atau kuning yang tampil, periksa kembali kolom wajib bertanda bintang, lalu coba lagi. Hubungi administrator bila menu atau tombol yang diperlukan tidak tersedia.</p>
+                <p class="text-base-content/65 mt-2 text-sm leading-6">{{ __('admin.guide.help_description') }}</p>
             </section>
         </aside>
     </div>

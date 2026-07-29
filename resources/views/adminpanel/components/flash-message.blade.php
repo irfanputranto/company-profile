@@ -17,7 +17,7 @@
             'panel' => 'border-[#dc2626] border-s-4 bg-[#fee2e2] text-[#7f1d1d] shadow-[0_12px_30px_rgba(127,29,29,0.22)]',
             'iconBox' => 'bg-[#dc2626] text-white',
             'icon' => 'icon-[tabler--alert-triangle]',
-            'title' => 'Terjadi kesalahan',
+            'title' => __('admin.flash.error'),
             'role' => 'alert',
             'live' => 'assertive',
         ],
@@ -25,7 +25,7 @@
             'panel' => 'border-[#d97706] border-s-4 bg-[#fef3c7] text-[#78350f] shadow-[0_12px_30px_rgba(120,53,15,0.22)]',
             'iconBox' => 'bg-[#f59e0b] text-[#451a03]',
             'icon' => 'icon-[tabler--alert-circle]',
-            'title' => 'Perhatian',
+            'title' => __('admin.flash.warning'),
             'role' => 'alert',
             'live' => 'assertive',
         ],
@@ -33,7 +33,7 @@
             'panel' => 'border-[#2563eb] border-s-4 bg-[#dbeafe] text-[#1e3a8a] shadow-[0_12px_30px_rgba(30,58,138,0.22)]',
             'iconBox' => 'bg-[#2563eb] text-white',
             'icon' => 'icon-[tabler--info-circle]',
-            'title' => 'Informasi',
+            'title' => __('admin.flash.info'),
             'role' => 'status',
             'live' => 'polite',
         ],
@@ -41,7 +41,7 @@
             'panel' => 'border-[#16a34a] border-s-4 bg-[#dcfce7] text-[#14532d] shadow-[0_12px_30px_rgba(20,83,45,0.22)]',
             'iconBox' => 'bg-[#16a34a] text-white',
             'icon' => 'icon-[tabler--circle-check]',
-            'title' => 'Berhasil',
+            'title' => __('admin.flash.success'),
             'role' => 'status',
             'live' => 'polite',
         ],
@@ -74,7 +74,7 @@
 
             <button type="button" x-on:click="open = false"
                 class="flex size-8 shrink-0 items-center justify-center rounded-lg text-current transition-colors hover:bg-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
-                title="Tutup notifikasi" aria-label="Tutup notifikasi">
+                title="{{ __('admin.common.close_notification') }}" aria-label="{{ __('admin.common.close_notification') }}">
                 <span class="icon-[tabler--x] size-4.5"></span>
             </button>
         </div>

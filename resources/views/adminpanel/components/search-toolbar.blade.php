@@ -2,10 +2,12 @@
     'action',
     'name' => 'q',
     'value' => null,
-    'placeholder' => 'Cari data...',
+    'placeholder' => null,
     'perPage' => 10,
     'preserve' => [],
 ])
+
+@php($placeholder ??= __('admin.search.default'))
 
 <form method="GET" action="{{ $action }}" x-data="dataTableFilters" x-ref="filterForm"
     {{ $attributes->merge(['class' => 'w-full']) }}>
@@ -19,14 +21,14 @@
 
         <div class="flex flex-wrap items-center gap-4">
             <div class="flex items-center gap-2 text-sm">
-                <span class="text-base-content/60 whitespace-nowrap">Tampilkan</span>
-                <select name="limit" class="select select-bordered select-sm w-20" aria-label="Jumlah data per halaman"
+                <span class="text-base-content/60 whitespace-nowrap">{{ __('admin.search.show') }}</span>
+                <select name="limit" class="select select-bordered select-sm w-20" aria-label="{{ __('admin.search.per_page') }}"
                     @change="applyFilters">
                     @foreach ([10, 25, 50, 100] as $option)
                         <option value="{{ $option }}" @selected((int) $perPage === $option)>{{ $option }}</option>
                     @endforeach
                 </select>
-                <span class="text-base-content/60">data</span>
+                <span class="text-base-content/60">{{ __('admin.search.data') }}</span>
             </div>
         </div>
 
@@ -35,7 +37,7 @@
                 <span class="icon-[tabler--search] text-base-content/50 size-4 shrink-0"></span>
                 <input name="{{ $name }}" type="search" value="{{ $value }}"
                     class="grow text-sm bg-transparent border-0 focus:outline-none focus:ring-0"
-                    placeholder="{{ $placeholder }}" autocomplete="off" aria-label="Pencarian"
+                    placeholder="{{ $placeholder }}" autocomplete="off" aria-label="{{ __('admin.search.label') }}"
                     @input.debounce.500ms="applyFilters">
             </label>
         </div>

@@ -17,6 +17,7 @@ class PermissionSeeder extends Seeder
         $permissionNames = [
             'access adminpanel',
             'view_activity_logs',
+            'view_analytics',
             ...MasterPermission::all(),
         ];
 

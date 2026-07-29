@@ -2,7 +2,7 @@
     'action',
     'title',
     'description',
-    'confirmLabel' => 'Ya, lanjutkan',
+    'confirmLabel' => null,
     'buttonLabel' => null,
     'icon' => 'icon-[tabler--check]',
     'buttonClass' => 'btn-primary',
@@ -11,6 +11,7 @@
 ])
 
 @php
+    $confirmLabel ??= __('admin.confirm_action.confirm');
     $dialogTitleId = 'confirm-action-' . md5($action . $title);
     $buttonTooltip = $tooltip ?? rtrim($title, '?');
 @endphp
@@ -26,7 +27,7 @@
                 <div class="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full"><span class="{{ $icon }} size-8"></span></div>
                 <h2 id="{{ $dialogTitleId }}" class="text-base-content mt-5 text-xl font-semibold">{{ $title }}</h2>
                 <p class="text-base-content/60 mt-2 text-sm leading-6">{{ $description }}</p>
-                <form method="POST" action="{{ $action }}" class="mt-5">@csrf @if($reason)<textarea name="reason" rows="3" class="textarea w-full text-start" minlength="5" maxlength="1000" placeholder="Tuliskan alasan pembatalan" required></textarea>@endif<div class="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center"><button type="button" class="btn btn-soft min-w-28" @click="close">Batal</button><button type="submit" class="btn btn-primary min-w-28"><span class="{{ $icon }} size-5"></span>{{ $confirmLabel }}</button></div></form>
+                <form method="POST" action="{{ $action }}" class="mt-5">@csrf @if($reason)<textarea name="reason" rows="3" class="textarea w-full text-start" minlength="5" maxlength="1000" placeholder="{{ __('admin.confirm_action.reason_placeholder') }}" required></textarea>@endif<div class="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center"><button type="button" class="btn btn-soft min-w-28" @click="close">{{ __('admin.common.cancel') }}</button><button type="submit" class="btn btn-primary min-w-28"><span class="{{ $icon }} size-5"></span>{{ $confirmLabel }}</button></div></form>
             </div>
         </div>
     </template>

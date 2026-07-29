@@ -38,8 +38,8 @@ class LoginController extends Controller
         return redirect()->route('dashboard')
             ->with('alert', [
                 'icon' => 'success',
-                'title' => 'Selamat Datang',
-                'message' => 'Anda berhasil masuk ke sistem.',
+                'title' => __('admin.auth.welcome_title'),
+                'message' => __('admin.auth.welcome_message'),
             ]);
     }
 
@@ -53,8 +53,8 @@ class LoginController extends Controller
         return redirect()->route('login')
             ->with('alert', [
                 'icon' => 'success',
-                'title' => 'Berhasil Keluar',
-                'message' => 'Sesi Anda telah diakhiri dengan aman.',
+                'title' => __('admin.auth.logout_title'),
+                'message' => __('admin.auth.logout_message'),
             ]);
     }
 }

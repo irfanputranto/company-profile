@@ -20,7 +20,16 @@ class UserController extends BaseWebCrud
 
     private ?string $oldAvatarPath = null;
 
-    public function __construct(private readonly OptimizedImageService $optimizedImageService) {}
+    public function __construct(private readonly OptimizedImageService $optimizedImageService)
+    {
+        $this->successStoreMsg = __('admin.users.created');
+        $this->successUpdateMsg = __('admin.users.updated');
+        $this->successDestroyMsg = __('admin.users.deleted');
+        $this->filterFields = [
+            ['type' => 'select', 'name' => 'role_id', 'label' => __('admin.roles.title'), 'placeholder' => __('admin.users.all_roles'), 'options' => []],
+            ['type' => 'select', 'name' => 'status', 'label' => __('admin.profile.status'), 'placeholder' => __('admin.users.all_statuses'), 'options' => ['active' => __('admin.common.active'), 'inactive' => __('admin.common.inactive')]],
+        ];
+    }
 
     public $model = User::class;
 
@@ -38,11 +47,11 @@ class UserController extends BaseWebCrud
 
     public $redirectSuccessUpdate = 'master.users.index';
 
-    public $successStoreMsg = 'Pengguna berhasil ditambahkan.';
+    public $successStoreMsg;
 
-    public $successUpdateMsg = 'Pengguna berhasil diperbarui.';
+    public $successUpdateMsg;
 
-    public $successDestroyMsg = 'Pengguna berhasil dihapus.';
+    public $successDestroyMsg;
 
     public $defaultOrder = 'name';
 
@@ -66,10 +75,7 @@ class UserController extends BaseWebCrud
 
     public $lockRelationParam = true;
 
-    protected array $filterFields = [
-        ['type' => 'select', 'name' => 'role_id', 'label' => 'Role', 'placeholder' => 'Semua role', 'options' => []],
-        ['type' => 'select', 'name' => 'status', 'label' => 'Status', 'placeholder' => 'Semua status', 'options' => ['active' => 'Aktif', 'inactive' => 'Tidak aktif']],
-    ];
+    protected array $filterFields = [];
 
     public function __prepareDataStore($data): array
     {
@@ -118,7 +124,7 @@ class UserController extends BaseWebCrud
     protected function beforeUpdate(): mixed
     {
         if (auth()->id() === $this->row->id && ! $this->requestData->boolean('is_active')) {
-            return back()->withInput()->withErrors(['is_active' => 'Anda tidak dapat menonaktifkan akun sendiri.']);
+            return back()->withInput()->withErrors(['is_active' => __('admin.users.cannot_disable_self')]);
         }
 
         return null;
@@ -127,7 +133,7 @@ class UserController extends BaseWebCrud
     protected function beforeDestroy(): mixed
     {
         return auth()->id() === $this->row->id
-            ? back()->with('error_message', 'Anda tidak dapat menghapus akun sendiri.')
+            ? back()->with('error_message', __('admin.users.cannot_delete_self'))
             : null;
     }
 
@@ -145,7 +151,7 @@ class UserController extends BaseWebCrud
                 ->performedOn($this->row)
                 ->event('updated')
                 ->withProperties(['old' => ['roles' => $oldRoles], 'attributes' => ['roles' => $newRoles]])
-                ->log('Mengubah role User');
+                ->log(__('admin.users.role_activity'));
         }
     }
 

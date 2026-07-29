@@ -4,14 +4,14 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="id" data-theme="{{ config('theme.default') }}" data-theme-default="{{ config('theme.default') }}"
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ config('theme.default') }}" data-theme-default="{{ config('theme.default') }}"
     data-theme-options="{{ implode(',', array_keys(config('theme.themes'))) }}"
     data-theme-storage-key="{{ config('theme.storage_key') }}" data-layout-path="dashboard-free" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Login - {{ config('app.name') }}</title>
+    <title>{{ __('admin.auth.title') }} - {{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen overflow-x-hidden bg-[#2f2838] font-sans antialiased text-white">
@@ -25,18 +25,18 @@
                 </span>
                 <div>
                     <p class="text-xl font-bold leading-tight text-white">{{ config('app.name') }}</p>
-                    <p class="mt-0.5 text-xs font-medium tracking-wide text-[#c9c1d0]">Laravel application skeleton</p>
+                    <p class="mt-0.5 text-xs font-medium tracking-wide text-[#c9c1d0]">{{ __('admin.auth.tagline') }}</p>
                 </div>
             </a>
 
             <div class="mb-7">
-                <h1 class="text-3xl font-bold tracking-tight text-white">Masuk ke akun</h1>
-                <p class="mt-2 text-sm leading-6 text-[#c9c1d0]">Gunakan email atau username dan kata sandi Anda.</p>
+                <h1 class="text-3xl font-bold tracking-tight text-white">{{ __('admin.auth.heading') }}</h1>
+                <p class="mt-2 text-sm leading-6 text-[#c9c1d0]">{{ __('admin.auth.description') }}</p>
             </div>
 
             @if (session()->has('alert'))
                 <div role="status" aria-live="polite" class="mb-5 rounded-xl border border-success/40 bg-success/10 p-3.5">
-                    <p class="text-sm font-bold text-white">{{ session('alert.title', 'Berhasil') }}</p>
+                    <p class="text-sm font-bold text-white">{{ session('alert.title', __('admin.auth.success')) }}</p>
                     <p class="mt-0.5 text-sm text-[#d9fbe5]">{{ session('alert.message') }}</p>
                 </div>
             @endif
@@ -45,24 +45,24 @@
                 @csrf
 
                 <div>
-                    <label class="block text-sm font-semibold text-white" for="login">Email atau username <span class="text-primary">*</span></label>
+                    <label class="block text-sm font-semibold text-white" for="login">{{ __('admin.auth.login') }} <span class="text-primary">*</span></label>
                     <label class="relative mt-2 flex h-12 items-center rounded-lg border bg-[#352e3e] text-white transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/25 {{ $errorBag->has('login') ? 'border-error' : 'border-[#766d80]' }}">
                         <span class="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-[#c7becf]">
                             <span class="icon-[tabler--user] size-5"></span>
                         </span>
-                        <input id="login" type="text" name="login" value="{{ old('login') }}" class="h-full w-full bg-transparent pl-11 pr-4 text-base outline-none placeholder:text-[#aaa1b2]" placeholder="Email atau username" required autofocus>
+                        <input id="login" type="text" name="login" value="{{ old('login') }}" class="h-full w-full bg-transparent pl-11 pr-4 text-base outline-none placeholder:text-[#aaa1b2]" placeholder="{{ __('admin.auth.login') }}" required autofocus>
                     </label>
                     @error('login')<p class="mt-1.5 text-xs font-medium text-error">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-white" for="password">Kata sandi <span class="text-primary">*</span></label>
+                    <label class="block text-sm font-semibold text-white" for="password">{{ __('admin.auth.password') }} <span class="text-primary">*</span></label>
                     <label class="relative mt-2 flex h-12 items-center rounded-lg border bg-[#352e3e] text-white transition focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/25 {{ $errorBag->has('password') ? 'border-error' : 'border-[#766d80]' }}">
                         <span class="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-[#c7becf]">
                             <span class="icon-[tabler--lock] size-5"></span>
                         </span>
-                        <input id="password" :type="showPassword ? 'text' : 'password'" name="password" class="h-full w-full bg-transparent pl-11 pr-11 text-base outline-none placeholder:text-[#aaa1b2]" placeholder="Masukkan kata sandi" required>
-                        <button type="button" class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-[#c7becf] transition hover:text-primary" @click="showPassword = ! showPassword" :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'">
+                        <input id="password" :type="showPassword ? 'text' : 'password'" name="password" class="h-full w-full bg-transparent pl-11 pr-11 text-base outline-none placeholder:text-[#aaa1b2]" placeholder="{{ __('admin.auth.password_placeholder') }}" required>
+                        <button type="button" class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-[#c7becf] transition hover:text-primary" @click="showPassword = ! showPassword" :aria-label="showPassword ? @js(__('admin.auth.hide_password')) : @js(__('admin.auth.show_password'))">
                             <span :class="showPassword ? 'icon-[tabler--eye-off]' : 'icon-[tabler--eye]'" class="size-5"></span>
                         </button>
                     </label>
@@ -71,10 +71,10 @@
 
                 <label class="flex cursor-pointer items-center gap-3 text-sm font-medium text-[#e9e3ed]">
                     <input type="checkbox" name="remember" value="1" class="checkbox checkbox-primary checkbox-sm rounded-sm border-[#7d7487] bg-transparent" @checked(old('remember'))>
-                    <span>Ingat saya di perangkat ini</span>
+                    <span>{{ __('admin.auth.remember') }}</span>
                 </label>
 
-                <button class="btn btn-lg btn-primary btn-gradient btn-block h-12 rounded-lg text-base font-bold shadow-lg shadow-primary/20" type="submit">Masuk</button>
+                <button class="btn btn-lg btn-primary btn-gradient btn-block h-12 rounded-lg text-base font-bold shadow-lg shadow-primary/20" type="submit">{{ __('admin.auth.submit') }}</button>
             </form>
         </section>
     </main>

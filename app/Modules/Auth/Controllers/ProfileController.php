@@ -45,6 +45,6 @@ class ProfileController extends Controller
             Storage::disk(config('filesystems.private_media_disk'))->delete($oldAvatarPath);
         }
 
-        return back()->with('success_message', 'Foto profil berhasil diperbarui.');
+        return back()->with('success_message', __('admin.profile.photo_updated'));
     }
 }

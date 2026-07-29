@@ -15,6 +15,17 @@ class RoleController extends BaseWebCrud
 
     public const SYSTEM_ROLES = ['administrator', 'superadmin'];
 
+    public function __construct()
+    {
+        $this->successStoreMsg = __('admin.roles.created');
+        $this->successUpdateMsg = __('admin.roles.updated');
+        $this->successDestroyMsg = __('admin.roles.deleted');
+        $this->filterFields = [
+            ['type' => 'select', 'name' => 'usage', 'label' => __('admin.roles.usage'), 'placeholder' => __('admin.roles.all_roles'), 'options' => ['assigned' => __('admin.roles.assigned'), 'unused' => __('admin.roles.unused')]],
+            ['type' => 'select', 'name' => 'kind', 'label' => __('admin.roles.kind'), 'placeholder' => __('admin.roles.all_types'), 'options' => ['system' => __('admin.roles.system_role'), 'custom' => __('admin.roles.operational_role')]],
+        ];
+    }
+
     public $model = Role::class;
 
     public $modelKey = 'id';
@@ -31,11 +42,11 @@ class RoleController extends BaseWebCrud
 
     public $redirectSuccessUpdate = 'master.roles.index';
 
-    public $successStoreMsg = 'Role dan permission berhasil ditambahkan.';
+    public $successStoreMsg;
 
-    public $successUpdateMsg = 'Role dan permission berhasil diperbarui.';
+    public $successUpdateMsg;
 
-    public $successDestroyMsg = 'Role berhasil dihapus.';
+    public $successDestroyMsg;
 
     public $defaultOrder = 'name';
 
@@ -59,10 +70,7 @@ class RoleController extends BaseWebCrud
 
     public $lockRelationParam = true;
 
-    protected array $filterFields = [
-        ['type' => 'select', 'name' => 'usage', 'label' => 'Penggunaan', 'placeholder' => 'Semua role', 'options' => ['assigned' => 'Sudah digunakan', 'unused' => 'Belum digunakan']],
-        ['type' => 'select', 'name' => 'kind', 'label' => 'Jenis', 'placeholder' => 'Semua jenis', 'options' => ['system' => 'Role sistem', 'custom' => 'Role operasional']],
-    ];
+    protected array $filterFields = [];
 
     public function __prepareDataStore($data): array
     {
@@ -91,7 +99,7 @@ class RoleController extends BaseWebCrud
     protected function beforeUpdate(): mixed
     {
         return $this->isSystemRole($this->row)
-            ? back()->with('error_message', 'Role sistem tidak dapat diubah.')
+            ? back()->with('error_message', __('admin.roles.cannot_update_system'))
             : null;
     }
 
@@ -108,11 +116,11 @@ class RoleController extends BaseWebCrud
     protected function beforeDestroy(): mixed
     {
         if ($this->isSystemRole($this->row)) {
-            return back()->with('error_message', 'Role sistem tidak dapat dihapus.');
+            return back()->with('error_message', __('admin.roles.cannot_delete_system'));
         }
 
         if ($this->row->users()->exists()) {
-            return back()->with('error_message', 'Role masih digunakan oleh pengguna.');
+            return back()->with('error_message', __('admin.roles.cannot_delete_used'));
         }
 
         return null;
@@ -134,7 +142,7 @@ class RoleController extends BaseWebCrud
                 ->performedOn($this->row)
                 ->event('updated')
                 ->withProperties(['old' => ['permissions' => $oldPermissions], 'attributes' => ['permissions' => $newPermissions]])
-                ->log('Mengubah permission Role');
+                ->log(__('admin.roles.permissions_activity'));
         }
     }
 
@@ -154,7 +162,7 @@ class RoleController extends BaseWebCrud
                 }
             }
 
-            return 'Akses Sistem';
+            return __('admin.roles.system_access_group');
         });
 
         return $data;

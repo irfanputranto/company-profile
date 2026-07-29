@@ -17,6 +17,8 @@ return [
 
     'private_media_disk' => env('PRIVATE_MEDIA_DISK', 'local'),
 
+    'public_media_disk' => env('PUBLIC_MEDIA_DISK', 'content_media'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -54,6 +56,15 @@ return [
             'report' => false,
         ],
 
+        'content_media' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -80,6 +91,8 @@ return [
     |
     */
 
-    'links' => [],
+    'links' => [
+        public_path('storage') => storage_path('app/public'),
+    ],
 
 ];

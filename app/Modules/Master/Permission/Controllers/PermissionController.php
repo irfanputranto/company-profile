@@ -13,6 +13,17 @@ class PermissionController extends BaseWebCrud
 {
     use HasDynamicFilters;
 
+    public function __construct()
+    {
+        $this->successStoreMsg = __('admin.permissions.created');
+        $this->successUpdateMsg = __('admin.permissions.updated');
+        $this->successDestroyMsg = __('admin.permissions.deleted');
+        $this->filterFields = [
+            ['type' => 'select', 'name' => 'usage', 'label' => __('admin.permissions.usage'), 'placeholder' => __('admin.permissions.all_permissions'), 'options' => ['assigned' => __('admin.permissions.assigned'), 'unused' => __('admin.permissions.unused')]],
+            ['type' => 'select', 'name' => 'kind', 'label' => __('admin.permissions.kind'), 'placeholder' => __('admin.permissions.all_types'), 'options' => ['system' => __('admin.permissions.system_permission'), 'custom' => __('admin.permissions.custom_permission')]],
+        ];
+    }
+
     public $model = Permission::class;
 
     public $modelKey = 'id';
@@ -29,11 +40,11 @@ class PermissionController extends BaseWebCrud
 
     public $redirectSuccessUpdate = 'master.permissions.index';
 
-    public $successStoreMsg = 'Permission berhasil ditambahkan.';
+    public $successStoreMsg;
 
-    public $successUpdateMsg = 'Permission berhasil diperbarui.';
+    public $successUpdateMsg;
 
-    public $successDestroyMsg = 'Permission berhasil dihapus.';
+    public $successDestroyMsg;
 
     public $defaultOrder = 'name';
 
@@ -53,10 +64,7 @@ class PermissionController extends BaseWebCrud
 
     public $lockRelationParam = true;
 
-    protected array $filterFields = [
-        ['type' => 'select', 'name' => 'usage', 'label' => 'Penggunaan', 'placeholder' => 'Semua permission', 'options' => ['assigned' => 'Sudah digunakan', 'unused' => 'Belum digunakan']],
-        ['type' => 'select', 'name' => 'kind', 'label' => 'Jenis', 'placeholder' => 'Semua jenis', 'options' => ['system' => 'Permission sistem', 'custom' => 'Permission tambahan']],
-    ];
+    protected array $filterFields = [];
 
     protected function beforeList(): void
     {
@@ -71,7 +79,7 @@ class PermissionController extends BaseWebCrud
     protected function beforeUpdate(): mixed
     {
         if (($this->isSystemPermission($this->row) || $this->isAssigned($this->row)) && $this->row->name !== $this->requestData->string('name')->toString()) {
-            return back()->withInput()->with('error_message', 'Permission yang digunakan sistem, role, atau pengguna tidak dapat diubah.');
+            return back()->withInput()->with('error_message', __('admin.permissions.cannot_update_used'));
         }
 
         return null;
@@ -80,11 +88,11 @@ class PermissionController extends BaseWebCrud
     protected function beforeDestroy(): mixed
     {
         if ($this->isSystemPermission($this->row)) {
-            return back()->with('error_message', 'Permission sistem tidak dapat dihapus.');
+            return back()->with('error_message', __('admin.permissions.cannot_delete_system'));
         }
 
         if ($this->row->roles()->exists() || $this->row->users()->exists()) {
-            return back()->with('error_message', 'Permission masih digunakan oleh role atau pengguna.');
+            return back()->with('error_message', __('admin.permissions.cannot_delete_used'));
         }
 
         return null;
@@ -103,6 +111,6 @@ class PermissionController extends BaseWebCrud
     /** @return list<string> */
     public static function systemPermissions(): array
     {
-        return ['access adminpanel', 'view_activity_logs', ...MasterPermission::all()];
+        return ['access adminpanel', 'view_activity_logs', 'view_analytics', ...MasterPermission::all()];
     }
 }

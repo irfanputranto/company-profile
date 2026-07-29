@@ -1,9 +1,9 @@
 @props(['title', 'fullscreen' => false, 'kiosk' => false])
 
 <!DOCTYPE html>
-<html lang="id" data-theme="{{ config('theme.default') }}" data-theme-default="{{ config('theme.default') }}"
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ config('theme.default') }}" data-theme-default="{{ config('theme.default') }}"
     data-theme-options="{{ implode(',', array_keys(config('theme.themes'))) }}"
-    data-theme-storage-key="{{ config('theme.storage_key') }}" dir="ltr" class="scroll-smooth">
+    data-theme-storage-key="{{ config('theme.storage_key') }}" dir="{{ app('App\\Modules\\CompanyProfile\\Services\\LanguageResolver')->activeLanguages()->firstWhere('code', app()->getLocale())?->direction ?? 'ltr' }}" class="scroll-smooth">
 
 <head>
     <x-adminpanel::layouts.head :title="$title" />
@@ -25,8 +25,8 @@
                 class="btn btn-circle btn-sm border-base-content/15 bg-base-100 text-base-content/70 hover:bg-primary hover:text-primary-content fixed top-24 z-[60] hidden shadow-md transition-[inset-inline-start,background-color,color] duration-300 lg:inline-flex"
                 :class="sidebarCollapsed ? 'start-3' : 'start-[17.75rem]'"
                 @click="toggleSidebar"
-                :title="sidebarCollapsed ? 'Tampilkan menu navigasi' : 'Sembunyikan menu navigasi'"
-                :aria-label="sidebarCollapsed ? 'Tampilkan menu navigasi' : 'Sembunyikan menu navigasi'"
+                :title="sidebarCollapsed ? @js(__('admin.navigation.show')) : @js(__('admin.navigation.hide'))"
+                :aria-label="sidebarCollapsed ? @js(__('admin.navigation.show')) : @js(__('admin.navigation.hide'))"
                 :aria-expanded="(!sidebarCollapsed).toString()"
                 aria-controls="layout-sidebar">
                 <span x-show="!sidebarCollapsed" class="icon-[tabler--chevrons-left] size-4.5"></span>
@@ -72,7 +72,7 @@
     @unless ($kiosk)
         <button id="scrollToTopBtn"
             class="btn btn-circle btn-soft btn-secondary/20 bottom-15 end-15 motion-preset-slide-right motion-duration-800 motion-delay-100 fixed absolute z-[3] hidden"
-            title="Kembali ke atas" aria-label="Kembali ke atas"><span class="icon-[tabler--chevron-up] size-5 shrink-0"></span></button>
+            title="{{ __('admin.common.back_to_top') }}" aria-label="{{ __('admin.common.back_to_top') }}"><span class="icon-[tabler--chevron-up] size-5 shrink-0"></span></button>
     @endunless
 </body>
 

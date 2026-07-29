@@ -1,13 +1,17 @@
 @props([
-    'placeholder' => 'Pilih data',
-    'searchPlaceholder' => 'Cari data...',
-    'noResultsText' => 'Data tidak ditemukan',
+    'placeholder' => null,
+    'searchPlaceholder' => null,
+    'noResultsText' => null,
     'detailed' => false,
     'dark' => false,
     'invalid' => false,
 ])
 
 @php
+    $placeholder ??= __('admin.select.placeholder');
+    $searchPlaceholder ??= __('admin.select.search');
+    $noResultsText ??= __('admin.select.no_results');
+
     $darkToggleClasses = $invalid
         ? 'border-error ring-2 ring-error/20'
         : 'border-[#766d80] focus:border-primary focus:ring-2 focus:ring-primary/25';

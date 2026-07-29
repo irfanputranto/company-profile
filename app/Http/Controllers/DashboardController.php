@@ -22,10 +22,10 @@ class DashboardController extends Controller
     private function greeting(): string
     {
         return match (true) {
-            now()->hour < 11 => 'Selamat pagi',
-            now()->hour < 15 => 'Selamat siang',
-            now()->hour < 18 => 'Selamat sore',
-            default => 'Selamat malam',
+            now()->hour < 11 => __('admin.dashboard.morning'),
+            now()->hour < 15 => __('admin.dashboard.afternoon'),
+            now()->hour < 18 => __('admin.dashboard.evening'),
+            default => __('admin.dashboard.night'),
         };
     }
 }

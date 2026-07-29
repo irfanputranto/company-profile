@@ -1,16 +1,20 @@
 @props([
     'action',
-    'name' => 'data ini',
-    'title' => 'Hapus data?',
+    'name' => null,
+    'title' => null,
     'description' => null,
     'buttonLabel' => null,
 ])
 
-@php($dialogTitleId = 'confirm-delete-' . md5($action))
+@php
+    $name ??= __('admin.delete.data');
+    $title ??= __('admin.delete.title');
+    $dialogTitleId = 'confirm-delete-' . md5($action);
+@endphp
 
 <div x-data="confirmDelete" {{ $attributes->merge(['class' => 'inline-flex']) }}>
     <button type="button" class="btn btn-text btn-error btn-sm {{ $buttonLabel ? 'gap-2' : 'btn-square' }}" @click="show"
-        title="Hapus {{ $name }}" aria-label="Hapus {{ $name }}">
+        title="{{ __('admin.delete.button_title', ['name' => $name]) }}" aria-label="{{ __('admin.delete.button_title', ['name' => $name]) }}">
         <span class="icon-[tabler--trash] size-5"></span>
         @if ($buttonLabel)<span>{{ $buttonLabel }}</span>@endif
     </button>
@@ -28,17 +32,17 @@
 
                 <h2 id="{{ $dialogTitleId }}" class="text-base-content mt-5 text-xl font-semibold">{{ $title }}</h2>
                 <p class="text-base-content/60 mt-2 text-sm leading-6">
-                    {{ $description ?? "Anda akan menghapus {$name}. Tindakan ini tidak dapat dibatalkan." }}
+                    {{ $description ?? __('admin.delete.description', ['name' => $name]) }}
                 </p>
 
                 <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
-                    <button type="button" class="btn btn-soft min-w-28" @click="close">Batal</button>
+                    <button type="button" class="btn btn-soft min-w-28" @click="close">{{ __('admin.common.cancel') }}</button>
                     <form method="POST" action="{{ $action }}">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-error min-w-28">
                             <span class="icon-[tabler--trash] size-5"></span>
-                            Ya, hapus
+                            {{ __('admin.delete.confirm') }}
                         </button>
                     </form>
                 </div>

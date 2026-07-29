@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Modules\CompanyProfile\View\Components\LanguageSwitcher;
 use App\Services\PageGuideResolver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Middleware\TrustProxies;
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::anonymousComponentPath(resource_path('views/adminpanel'), 'adminpanel');
+        Blade::component('language-switcher', LanguageSwitcher::class);
         TrustProxies::at(config('security.trusted_proxies'));
 
         if (parse_url((string) config('app.url'), PHP_URL_SCHEME) === 'https') {

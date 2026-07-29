@@ -2,12 +2,17 @@
     'model',
     'title',
     'description',
-    'eyebrow' => 'Panduan Laporan',
+    'eyebrow' => null,
     'icon' => 'icon-[tabler--book-2]',
     'titleId' => 'report-guide-title',
     'dialogId' => null,
-    'confirmLabel' => 'Saya Mengerti',
+    'confirmLabel' => null,
 ])
+
+@php
+    $eyebrow ??= __('admin.guide.report_eyebrow');
+    $confirmLabel ??= __('admin.guide.understood');
+@endphp
 
 <template x-teleport="body">
     <div
@@ -53,8 +58,8 @@
                     <button
                         type="button"
                         class="btn btn-circle btn-sm shrink-0 border-white/20 bg-white/10 text-white hover:bg-white/20"
-                        title="Tutup panduan"
-                        aria-label="Tutup panduan"
+                        title="{{ __('admin.guide.close_title') }}"
+                        aria-label="{{ __('admin.guide.close_title') }}"
                         @click="{{ $model }} = false"
                     >
                         <span class="icon-[tabler--x] size-5" aria-hidden="true"></span>
@@ -67,7 +72,7 @@
             </div>
 
             <footer class="flex shrink-0 items-center justify-between gap-3 border-t border-base-content/10 bg-base-200/40 px-5 py-4 sm:px-7">
-                <p class="hidden text-xs text-base-content/55 sm:block">Tekan Esc atau klik area gelap untuk menutup panduan.</p>
+                <p class="hidden text-xs text-base-content/55 sm:block">{{ __('admin.guide.close_hint') }}</p>
                 <button type="button" class="btn btn-primary ms-auto" @click="{{ $model }} = false">
                     <span class="icon-[tabler--check] size-5" aria-hidden="true"></span>
                     {{ $confirmLabel }}

@@ -20,7 +20,6 @@ class SecurityHeaders
         $headers->set('Cross-Origin-Opener-Policy', 'same-origin');
         $headers->set('Cross-Origin-Resource-Policy', 'same-origin');
         $headers->set('X-Permitted-Cross-Domain-Policies', 'none');
-        $headers->set('X-Robots-Tag', 'noindex, nofollow, noimageindex, noarchive, nosnippet');
         $headers->remove('X-Powered-By');
 
         if ($request->isSecure() && config('security.headers.hsts')) {
@@ -36,7 +35,8 @@ class SecurityHeaders
             $headers->set($header, (string) config('security.csp.policy'));
         }
 
-        if ($request->user() !== null || $request->is('login')) {
+        if ($request->user() !== null || $request->is('login', 'register', 'forgot-password', 'reset-password/*')) {
+            $headers->set('X-Robots-Tag', 'noindex, nofollow, noimageindex, noarchive, nosnippet');
             $headers->set('Cache-Control', 'no-store, private, max-age=0');
             $headers->set('Pragma', 'no-cache');
             $headers->set('Expires', '0');

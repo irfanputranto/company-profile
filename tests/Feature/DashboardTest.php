@@ -16,7 +16,7 @@ it('menampilkan ringkasan fondasi aplikasi', function (): void {
         ->get(route('dashboard'))
         ->assertSuccessful()
         ->assertSeeText('Admin Skeleton')
-        ->assertSeeText('Skeleton siap dikembangkan')
+        ->assertSeeText('Fondasi siap dikembangkan')
         ->assertSeeText('Pengguna aktif')
         ->assertSeeText('Permission');
 });

@@ -5,15 +5,17 @@
     <div class="w-full min-w-0">
         <nav class="navbar w-full px-4 py-2 sm:px-6 lg:px-8">
             <div class="navbar-start items-center gap-2">
-                <button type="button" class="btn btn-soft btn-square btn-sm lg:hidden" aria-controls="layout-sidebar" data-overlay="#layout-sidebar" title="Buka menu navigasi" aria-label="Buka menu navigasi">
+                <button type="button" class="btn btn-soft btn-square btn-sm lg:hidden" aria-controls="layout-sidebar" data-overlay="#layout-sidebar" title="{{ __('admin.navigation.open') }}" aria-label="{{ __('admin.navigation.open') }}">
                     <span class="icon-[tabler--menu-2] size-4.5"></span>
                 </button>
             </div>
 
             <div class="navbar-end items-center gap-3">
+                <x-language-switcher />
+
                 <div class="dropdown relative inline-flex [--offset:8] [--placement:bottom-end]">
                     <button id="theme-dropdown" type="button" class="dropdown-toggle btn btn-soft btn-sm gap-2"
-                        aria-haspopup="menu" aria-expanded="false" aria-label="Ganti tema tampilan">
+                        aria-haspopup="menu" aria-expanded="false" aria-label="{{ __('admin.header.change_theme') }}">
                         <span class="icon-[tabler--palette] size-5"></span>
                         <span class="hidden sm:inline" data-theme-current-label>{{ config('theme.themes.'.config('theme.default')) }}</span>
                         <span class="icon-[tabler--chevron-down] size-4"></span>
@@ -21,7 +23,7 @@
                     <ul class="dropdown-menu dropdown-open:opacity-100 hidden max-h-96 w-64 overflow-y-auto p-2"
                         role="menu" aria-labelledby="theme-dropdown">
                         <li class="dropdown-header px-3 py-2">
-                            <span class="text-base-content font-semibold">Theme</span>
+                            <span class="text-base-content font-semibold">{{ __('admin.header.theme') }}</span>
                         </li>
                         @foreach (config('theme.themes') as $theme => $label)
                             <li>
@@ -44,15 +46,15 @@
 
                 @if (! empty($pageGuide))
                     <button type="button" class="btn btn-soft btn-sm gap-2" @click="pageGuideOpen = true" aria-controls="global-page-guide-dialog">
-                        <span class="icon-[tabler--help-circle] size-5"></span><span class="hidden sm:inline">Panduan</span>
+                        <span class="icon-[tabler--help-circle] size-5"></span><span class="hidden sm:inline">{{ __('admin.header.guide') }}</span>
                     </button>
                 @endif
 
                 <div class="dropdown relative inline-flex [--offset:21]">
                     <button id="profile-dropdown" type="button" class="dropdown-toggle hover:bg-base-200 flex max-w-64 items-center gap-3 rounded-lg px-2 py-1.5 text-start transition" aria-haspopup="menu" aria-expanded="false">
                         <div class="hidden min-w-0 sm:block">
-                            <p class="truncate text-sm font-semibold">{{ auth()->user()?->name ?? 'Pengguna' }}</p>
-                            <p class="text-base-content/60 truncate text-xs">{{ auth()->user()?->roles->first()?->name ?? 'Tanpa role' }}</p>
+                            <p class="truncate text-sm font-semibold">{{ auth()->user()?->name ?? __('admin.header.user') }}</p>
+                            <p class="text-base-content/60 truncate text-xs">{{ auth()->user()?->roles->first()?->name ?? __('admin.header.no_role') }}</p>
                         </div>
                         <x-adminpanel::components.user-avatar size="sm" />
                         <span class="icon-[tabler--chevron-down] text-base-content/60 hidden size-4 sm:block"></span>
@@ -61,17 +63,17 @@
                         <li class="dropdown-header mb-1 gap-4 px-5 pb-3.5 pt-4">
                             <x-adminpanel::components.user-avatar />
                             <div class="min-w-0">
-                                <h6 class="line-clamp-2 break-words font-semibold">{{ auth()->user()?->name ?? 'Pengguna' }}</h6>
+                                <h6 class="line-clamp-2 break-words font-semibold">{{ auth()->user()?->name ?? __('admin.header.user') }}</h6>
                                 <p class="text-base-content/60 truncate text-sm">{{ auth()->user()?->email ?? '—' }}</p>
                             </div>
                         </li>
-                        <li><a class="dropdown-item px-3" href="{{ route('profile') }}"><span class="icon-[tabler--user-circle] size-5"></span><span>Profil Saya</span></a></li>
+                        <li><a class="dropdown-item px-3" href="{{ route('profile') }}"><span class="icon-[tabler--user-circle] size-5"></span><span>{{ __('admin.header.my_profile') }}</span></a></li>
                         <li><hr class="border-base-content/20 -mx-2 my-1"></li>
                         <li class="dropdown-footer p-2 pt-1">
                             <form action="{{ route('logout') }}" method="POST" class="w-full">
                                 @csrf
                                 <button type="submit" class="text-error hover:bg-error/10 flex h-11 w-full items-center gap-2 rounded-lg px-3 text-start">
-                                    <span class="icon-[tabler--logout] size-5"></span><span>Keluar</span>
+                                    <span class="icon-[tabler--logout] size-5"></span><span>{{ __('admin.header.logout') }}</span>
                                 </button>
                             </form>
                         </li>

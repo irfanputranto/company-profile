@@ -1,17 +1,22 @@
 @props([
     'name' => 'image',
     'id' => 'image',
-    'label' => 'Unggah gambar',
-    'description' => 'Gambar akan diperkecil dan dikompres otomatis.',
+    'label' => null,
+    'description' => null,
     'currentUrl' => null,
     'required' => false,
 ])
+
+@php
+    $label ??= __('admin.upload.image');
+    $description ??= __('admin.upload.description');
+@endphp
 
 <div x-data="imageUpload(@js($currentUrl))" {{ $attributes->merge(['class' => 'rounded-xl border border-base-content/10 bg-base-200/30 p-4 sm:p-5']) }}>
     <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
         <div class="bg-base-100 relative flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-base-content/10">
             <span x-show="!preview" class="icon-[tabler--photo] text-base-content/30 size-10"></span>
-            <img x-show="preview" x-cloak :src="preview" alt="Pratinjau gambar" class="absolute inset-0 size-full object-contain p-2">
+            <img x-show="preview" x-cloak :src="preview" alt="{{ __('admin.upload.preview') }}" class="absolute inset-0 size-full object-contain p-2">
         </div>
 
         <div class="min-w-0 flex-1">
@@ -28,8 +33,8 @@
             >
                 <span class="icon-[tabler--cloud-upload] text-primary size-6 shrink-0"></span>
                 <span>
-                    <span class="block text-sm font-medium">Pilih atau tarik gambar</span>
-                    <span class="text-base-content/50 block text-xs">JPG, PNG, WebP · maksimal 2 MB</span>
+                    <span class="block text-sm font-medium">{{ __('admin.upload.choose_image') }}</span>
+                    <span class="text-base-content/50 block text-xs">{{ __('admin.upload.formats', ['size' => config('uploads.max_file_size_mb')]) }}</span>
                 </span>
                 <input
                     x-ref="file"
@@ -44,7 +49,7 @@
             </label>
             <p class="text-base-content/50 mt-2 flex items-center gap-1.5 text-xs">
                 <span class="icon-[tabler--sparkles] size-4 shrink-0"></span>
-                Otomatis diubah menjadi WebP agar penyimpanan tetap ringan.
+                {{ __('admin.upload.webp_hint') }}
             </p>
             <p x-show="error" x-text="error" class="text-error mt-2 text-sm"></p>
             @error($name)

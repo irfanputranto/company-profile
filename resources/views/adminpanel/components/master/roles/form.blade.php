@@ -15,10 +15,10 @@
 }">
     <section class="grid gap-4 sm:grid-cols-2">
         <div>
-            <label class="label-text font-medium" for="name">Nama role <span class="text-error">*</span></label>
+            <label class="label-text font-medium" for="name">{{ __('admin.roles.name') }} <span class="text-error">*</span></label>
             <input id="name" name="name" value="{{ old('name', $row?->name) }}"
-                class="input mt-2 w-full @error('name') input-error @enderror" placeholder="Contoh: supervisor kasir" required autofocus>
-            <p class="text-base-content/50 mt-1.5 text-xs">Nama akan disimpan dalam format huruf kecil.</p>
+                class="input mt-2 w-full @error('name') input-error @enderror" placeholder="{{ __('admin.roles.name_placeholder') }}" required autofocus>
+            <p class="text-base-content/50 mt-1.5 text-xs">{{ __('admin.roles.lowercase_hint') }}</p>
             @error('name')<p class="text-error mt-1.5 text-sm">{{ $message }}</p>@enderror
         </div>
         <div>
@@ -30,16 +30,16 @@
 
     <section class="space-y-4 border-base-content/10 border-t pt-6">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div><h2 class="font-semibold">Permission role</h2><p class="text-base-content/60 mt-1 text-sm">Satu role dapat memiliki banyak permission.</p></div>
-            <span class="badge badge-primary badge-soft self-start sm:self-auto"><span x-text="selected.length"></span>&nbsp;dipilih</span>
+            <div><h2 class="font-semibold">{{ __('admin.roles.role_permissions') }}</h2><p class="text-base-content/60 mt-1 text-sm">{{ __('admin.roles.permissions_hint') }}</p></div>
+            <span class="badge badge-primary badge-soft self-start sm:self-auto"><span x-text="selected.length"></span>&nbsp;{{ __('admin.common.selected') }}</span>
         </div>
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <label class="input flex w-full items-center gap-2 sm:max-w-md">
                 <span class="icon-[tabler--search] text-base-content/50 size-5 shrink-0"></span>
-                <input x-model="query" type="search" class="grow" placeholder="Cari permission...">
+                <input x-model="query" type="search" class="grow" placeholder="{{ __('admin.roles.search_permissions') }}">
             </label>
-            <div class="flex gap-2"><button type="button" class="btn btn-soft btn-sm" x-on:click="selectAll()">Pilih semua</button><button type="button" class="btn btn-text btn-sm" x-on:click="clearAll()">Kosongkan</button></div>
+            <div class="flex gap-2"><button type="button" class="btn btn-soft btn-sm" x-on:click="selectAll()">{{ __('admin.roles.select_all') }}</button><button type="button" class="btn btn-text btn-sm" x-on:click="clearAll()">{{ __('admin.roles.clear_all') }}</button></div>
         </div>
 
         @error('permission_ids')<p class="text-error text-sm">{{ $message }}</p>@enderror
