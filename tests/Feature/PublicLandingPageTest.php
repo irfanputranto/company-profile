@@ -4,6 +4,7 @@ use App\Models\Article;
 use App\Models\Experience;
 use App\Models\Faq;
 use App\Models\Language;
+use App\Models\Media;
 use App\Models\Profile;
 use App\Models\Project;
 use App\Models\Service;
@@ -151,17 +152,71 @@ it('renders the Bigspring-inspired landing page from company profile models with
             ->assertSee('Building dependable digital products')
             ->assertSee('Backend Engineering')
             ->assertSee('Laravel')
-            ->assertSee('Scalable Platform')
+            ->assertDontSee('Scalable Platform')
+            ->assertSee(route('projects.index'), false)
             ->assertSee('Senior Backend Engineer')
             ->assertSee('Dependable delivery with thoughtful technical decisions.')
             ->assertSee('Production Laravel')
             ->assertSee('What kind of projects do you take?')
             ->assertSee('vendor/bigspring/images/banner-art.svg')
             ->assertSee('vendor/bigspring/images/service-slide-1.webp')
+            ->assertSee('https://wa.me/628123456789?text=Hello%2C%20I%20would%20like%20to%20discuss%20an%20application%20for%20my%20business.', false)
+            ->assertSee('Chat on WhatsApp')
+            ->assertSee('icon-[tabler--brand-whatsapp]')
             ->assertSee('bigspring-home');
     } finally {
         Model::preventLazyLoading(false);
     }
+});
+
+it('renders projects on a dedicated page instead of the homepage', function (): void {
+    Model::preventLazyLoading();
+
+    try {
+        $this->get(route('projects.index'))
+            ->assertSuccessful()
+            ->assertSee('Products and systems built to perform')
+            ->assertSee('Scalable Platform')
+            ->assertSee('A high-traffic platform with reliable integrations.')
+            ->assertSee('Laravel')
+            ->assertSee('publicNavigation(\'projects\')', false);
+    } finally {
+        Model::preventLazyLoading(false);
+    }
+});
+
+it('renders the configured brand name logo and favicon', function (): void {
+    $logo = Media::query()->create([
+        'uuid' => fake()->uuid(),
+        'disk' => 'content_media',
+        'path' => 'company-profile/media/brand-logo.webp',
+        'original_name' => 'brand-logo.png',
+        'mime_type' => 'image/webp',
+        'extension' => 'webp',
+        'byte_size' => 1024,
+    ]);
+    $favicon = Media::query()->create([
+        'uuid' => fake()->uuid(),
+        'disk' => 'content_media',
+        'path' => 'company-profile/media/favicon.webp',
+        'original_name' => 'favicon.png',
+        'mime_type' => 'image/webp',
+        'extension' => 'webp',
+        'byte_size' => 512,
+    ]);
+
+    $this->profile->update([
+        'public_name' => 'Dynamic Brand',
+        'logo_media_id' => $logo->id,
+        'favicon_media_id' => $favicon->id,
+    ]);
+
+    $this->get(route('home'))
+        ->assertSuccessful()
+        ->assertSee('Dynamic Brand')
+        ->assertSee('company-profile/media/brand-logo.webp', false)
+        ->assertSee('company-profile/media/favicon.webp', false)
+        ->assertSee('rel="icon" type="image/webp"', false);
 });
 
 it('keeps the copied Bigspring assets and license available', function (): void {

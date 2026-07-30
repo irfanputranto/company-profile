@@ -1,16 +1,18 @@
 @props(['projects'])
 
-@if ($projects->isNotEmpty())
-    @php($images = ['blog-1.webp', 'blog-2.webp', 'blog-3.webp', 'blog-4.webp', 'blog-5.webp', 'blog-6.webp'])
+@php($images = ['blog-1.webp', 'blog-2.webp', 'blog-3.webp', 'blog-4.webp', 'blog-5.webp', 'blog-6.webp'])
 
-    <section id="projects" class="bs-section bs-section-light" data-nav-section="projects">
-        <div class="bs-container">
-            <div class="mx-auto max-w-2xl text-center" data-reveal>
-                <span class="bs-kicker">{{ __('company-profile.public.projects_section.eyebrow') }}</span>
-                <h2 class="bs-heading mt-5 text-3xl sm:text-4xl">{{ __('company-profile.public.projects_section.title') }}</h2>
-                <p class="mt-4 leading-7">{{ __('company-profile.public.projects_section.description') }}</p>
-            </div>
+<section class="bs-section">
+    <div class="bs-container">
+        <div class="mx-auto max-w-3xl text-center" data-reveal>
+            <span class="bs-kicker">{{ __('company-profile.public.projects_section.eyebrow') }}</span>
+            <h1 class="bs-heading mt-5 text-4xl sm:text-5xl">{{ __('company-profile.public.projects_section.title') }}</h1>
+            <p class="mx-auto mt-5 max-w-2xl text-base leading-8 sm:text-lg">
+                {{ __('company-profile.public.projects_section.description') }}
+            </p>
+        </div>
 
+        @if ($projects->isNotEmpty())
             <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($projects as $project)
                     <article class="bs-project-card" data-reveal>
@@ -40,6 +42,10 @@
                     </article>
                 @endforeach
             </div>
-        </div>
-    </section>
-@endif
+        @else
+            <div class="mt-12 rounded-2xl border border-dashed border-[#b9d8d5] bg-[#edf6f5] p-10 text-center">
+                <p>{{ __('company-profile.public.projects_page.empty') }}</p>
+            </div>
+        @endif
+    </div>
+</section>

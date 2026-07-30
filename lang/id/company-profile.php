@@ -113,6 +113,11 @@ return [
             'view' => 'Lihat proyek',
             'repository' => 'Repositori',
         ],
+        'projects_page' => [
+            'meta_title' => 'Proyek dan Portofolio',
+            'meta_description' => 'Kumpulan proyek aplikasi, sistem backend, integrasi, dan produk digital yang telah dikerjakan.',
+            'empty' => 'Proyek belum tersedia.',
+        ],
         'experience_section' => [
             'eyebrow' => 'Cara saya bekerja',
             'title' => 'Pengalaman dari sistem production nyata',
@@ -168,6 +173,10 @@ return [
             'title' => 'Punya tantangan produk yang perlu diselesaikan?',
             'description' => 'Ceritakan apa yang sedang dibangun, kendalanya, dan hasil sukses yang ingin dicapai.',
             'action' => 'Hubungi saya',
+        ],
+        'whatsapp' => [
+            'action' => 'Chat via WhatsApp',
+            'message' => 'Halo, saya ingin berdiskusi mengenai kebutuhan aplikasi untuk bisnis saya.',
         ],
         'footer' => [
             'description' => 'Company profile pribadi yang berfokus pada software engineering andal dan produk digital yang scalable.',

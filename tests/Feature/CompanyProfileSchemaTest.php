@@ -13,7 +13,14 @@ use Illuminate\Support\Facades\Schema;
 uses(RefreshDatabase::class);
 
 it('menyediakan skema company profile yang dapat dikustomisasi', function () {
-    expect(Schema::hasColumns('profiles', ['slug', 'headline', 'about', 'availability_status']))
+    expect(Schema::hasColumns('profiles', [
+        'slug',
+        'headline',
+        'about',
+        'availability_status',
+        'logo_media_id',
+        'favicon_media_id',
+    ]))
         ->toBeTrue()
         ->and(Schema::hasColumns('services', ['slug', 'summary', 'content', 'is_featured']))
         ->toBeTrue()

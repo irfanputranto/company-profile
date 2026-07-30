@@ -41,6 +41,7 @@ it('menampilkan menu utama dengan status aktif sesuai halaman', function (): voi
     $this->get(route('home'))
         ->assertSuccessful()
         ->assertSee('x-data="publicNavigation(\'home\')"', false)
+        ->assertSee(route('projects.index'), false)
         ->assertSee(route('blog.index'), false)
         ->assertSee(route('pricing.index'), false)
         ->assertSee('Beranda')

@@ -75,6 +75,66 @@ it('merender daftar seluruh resource reusable', function () {
     }
 });
 
+it('mengatur nama brand logo dan favicon dari profil utama', function () {
+    $logo = Media::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'uploaded_by' => $this->administrator->id,
+        'disk' => 'content_media',
+        'path' => 'company-profile/media/brand-logo.webp',
+        'original_name' => 'brand-logo.png',
+        'mime_type' => 'image/webp',
+        'extension' => 'webp',
+        'byte_size' => 1024,
+    ]);
+    $favicon = Media::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'uploaded_by' => $this->administrator->id,
+        'disk' => 'content_media',
+        'path' => 'company-profile/media/favicon.webp',
+        'original_name' => 'favicon.png',
+        'mime_type' => 'image/webp',
+        'extension' => 'webp',
+        'byte_size' => 512,
+    ]);
+
+    $this->get(route('company-profile.content.edit', [
+        'resource' => 'profiles',
+        'record' => $this->profile->id,
+    ]))
+        ->assertSuccessful()
+        ->assertSee('Nama brand')
+        ->assertSee('Logo brand (unggah melalui menu Media)')
+        ->assertSee('Favicon (unggah melalui menu Media)')
+        ->assertSee('brand-logo.png')
+        ->assertSee('favicon.png');
+
+    $this->put(route('company-profile.content.update', [
+        'resource' => 'profiles',
+        'record' => $this->profile->id,
+    ]), [
+        'public_name' => 'Brand Dinamis',
+        'logo_media_id' => $logo->id,
+        'favicon_media_id' => $favicon->id,
+        'headline' => $this->profile->headline,
+        'slug' => $this->profile->slug,
+        'email' => null,
+        'phone' => null,
+        'location' => null,
+        'timezone' => $this->profile->timezone,
+        'availability_status' => $this->profile->availability_status,
+        'years_experience' => $this->profile->years_experience,
+        'short_bio' => null,
+        'about' => null,
+        'is_active' => 1,
+    ])->assertSessionHasNoErrors()->assertRedirect();
+
+    $profile = $this->profile->refresh();
+
+    expect($profile->public_name)->toBe('Brand Dinamis')
+        ->and($profile->logo_media_id)->toBe($logo->id)
+        ->and($profile->favicon_media_id)->toBe($favicon->id);
+});
+
 it('menyimpan memperbarui dan menghapus service dengan audit serta activity log', function () {
     $storeResponse = $this->post(route('company-profile.content.store', ['resource' => 'services']), [
         'profile_id' => $this->profile->id,

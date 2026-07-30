@@ -21,7 +21,10 @@
     <meta name="analytics-endpoint" content="{{ route('analytics.events.store') }}">
     <meta name="description" content="{{ $description ?? __('company-profile.public.hero.marketing_description') }}">
     <meta name="theme-color" content="#0aa8a7">
-    <link rel="icon" href="{{ asset('vendor/bigspring/images/favicon.png') }}">
+    <link rel="icon" type="{{ $profile?->faviconMedia?->mime_type ?? 'image/png' }}"
+        href="{{ $profile?->faviconMedia
+            ? $profile->faviconMedia->publicUrl().'?v='.$profile->faviconMedia->updated_at->timestamp
+            : asset('vendor/bigspring/images/favicon.png') }}">
     <title>{{ $profile?->public_name ?? config('app.name') }} |
         {{ $title ?? __('company-profile.public.hero.marketing_title') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -159,7 +159,9 @@ class ContentResourceRegistry
                 'tabler--id',
                 ['public_name', 'headline', 'email', 'location'],
                 [
-                    self::text('public_name', 'Nama publik', ['required', 'string', 'max:255'], list: true),
+                    self::text('public_name', 'Nama brand', ['required', 'string', 'max:255'], list: true),
+                    self::select('logo_media_id', 'Logo brand', Media::class, 'original_name', ['nullable', 'integer']),
+                    self::select('favicon_media_id', 'Favicon', Media::class, 'original_name', ['nullable', 'integer']),
                     self::text('headline', 'Headline', ['required', 'string', 'max:255'], list: true),
                     self::text('slug', 'Slug', ['nullable', 'string', 'max:255'], unique: 'slug'),
                     self::email('email', 'Email', ['nullable', 'email:rfc', 'max:255'], list: true),

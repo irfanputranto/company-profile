@@ -113,6 +113,11 @@ return [
             'view' => 'View project',
             'repository' => 'Repository',
         ],
+        'projects_page' => [
+            'meta_title' => 'Projects and Portfolio',
+            'meta_description' => 'A collection of application, backend system, integration, and digital product projects.',
+            'empty' => 'No projects are available yet.',
+        ],
         'experience_section' => [
             'eyebrow' => 'How I work',
             'title' => 'Experience shaped by real production systems',
@@ -168,6 +173,10 @@ return [
             'title' => 'Have a product challenge to solve?',
             'description' => 'Tell me what you are building, where it is stuck, and what a successful outcome looks like.',
             'action' => 'Contact me',
+        ],
+        'whatsapp' => [
+            'action' => 'Chat on WhatsApp',
+            'message' => 'Hello, I would like to discuss an application for my business.',
         ],
         'footer' => [
             'description' => 'Personal company profile focused on dependable software engineering and scalable digital products.',

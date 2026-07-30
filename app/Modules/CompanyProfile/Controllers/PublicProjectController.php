@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Profile;
 use Illuminate\View\View;
 
-class PublicPricingController extends Controller
+class PublicProjectController extends Controller
 {
     public function __invoke(): View
     {
@@ -22,24 +22,23 @@ class PublicPricingController extends Controller
                 'socialLinks' => fn ($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
-                'pricingPlans' => fn ($query) => $query
+                'projects' => fn ($query) => $query
                     ->with([
                         'contentTranslations.language',
-                        'features' => fn ($featureQuery) => $featureQuery
-                            ->with('contentTranslations.language')
-                            ->where('features.is_active', true),
+                        'skills.contentTranslations.language',
                     ])
                     ->where('is_active', true)
+                    ->orderByDesc('is_featured')
                     ->orderBy('sort_order'),
             ])
             ->where('is_active', true)
             ->first();
 
-        return view('public.pricing', [
+        return view('public.projects', [
             'profile' => $profile,
             'services' => $profile?->services ?? collect(),
             'socialLinks' => $profile?->socialLinks ?? collect(),
-            'pricingPlans' => $profile?->pricingPlans ?? collect(),
+            'projects' => $profile?->projects ?? collect(),
         ]);
     }
 }

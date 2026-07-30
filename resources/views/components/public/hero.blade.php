@@ -1,9 +1,10 @@
-@props(['profile', 'services', 'projects'])
+@props(['profile', 'services'])
 
 @php
     $availability = $profile?->availability_status ?? 'available';
     $availabilityLabel = __("company-profile.public.availability.{$availability}");
-    $contactUrl = $profile?->email ? 'mailto:'.$profile->email : '#contact';
+    $whatsappUrl = $profile?->whatsappUrl(__('company-profile.public.whatsapp.message'));
+    $contactUrl = $whatsappUrl ?? ($profile?->email ? 'mailto:'.$profile->email : '#contact');
 @endphp
 
 <section id="about" class="bs-section relative" data-nav-section="home">
@@ -40,11 +41,12 @@
             </ul>
 
             <div class="mt-7 flex flex-wrap justify-center gap-3">
-                <a href="{{ $contactUrl }}" class="btn btn-primary rounded-full px-7">
-                    {{ __('company-profile.public.hero.marketing_primary_action') }}
-                    <span class="icon-[tabler--arrow-up-right] size-4.5"></span>
+                <a href="{{ $contactUrl }}" @if ($whatsappUrl) target="_blank" rel="noopener noreferrer" @endif
+                    class="btn btn-primary rounded-full px-7">
+                    {{ $whatsappUrl ? __('company-profile.public.whatsapp.action') : __('company-profile.public.hero.marketing_primary_action') }}
+                    <span class="{{ $whatsappUrl ? 'icon-[tabler--brand-whatsapp]' : 'icon-[tabler--arrow-up-right]' }} size-4.5"></span>
                 </a>
-                <a href="#services" class="btn btn-outline btn-primary rounded-full px-7">
+                <a href="{{ route('projects.index') }}" class="btn btn-outline btn-primary rounded-full px-7">
                     {{ __('company-profile.public.hero.marketing_secondary_action') }}
                 </a>
             </div>
@@ -69,7 +71,7 @@
                 <dt class="mt-1 text-xs leading-5 text-slate-500">{{ __('company-profile.public.hero.years') }}</dt>
             </div>
             <div class="px-2">
-                <dd class="text-2xl font-black text-[#17212b]">{{ $projects->count() }}</dd>
+                <dd class="text-2xl font-black text-[#17212b]">{{ $profile?->active_projects_count ?? 0 }}</dd>
                 <dt class="mt-1 text-xs leading-5 text-slate-500">{{ __('company-profile.public.hero.projects') }}</dt>
             </div>
             <div class="px-2">

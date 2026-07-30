@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasContentTranslations;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends AuditableModel
@@ -11,7 +12,7 @@ class Profile extends AuditableModel
 
     /** @var list<string> */
     protected $fillable = [
-        'user_id', 'slug', 'public_name', 'headline', 'short_bio', 'about', 'email', 'phone',
+        'user_id', 'logo_media_id', 'favicon_media_id', 'slug', 'public_name', 'headline', 'short_bio', 'about', 'email', 'phone',
         'location', 'timezone', 'availability_status', 'years_experience', 'resume_path', 'is_active',
     ];
 
@@ -22,6 +23,29 @@ class Profile extends AuditableModel
             'years_experience' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function whatsappUrl(string $message): ?string
+    {
+        $phone = str($this->phone)->replaceMatches('/\D+/', '')->toString();
+
+        if ($phone === '') {
+            return null;
+        }
+
+        return 'https://wa.me/'.$phone.'?text='.rawurlencode($message);
+    }
+
+    /** @return BelongsTo<Media, $this> */
+    public function logoMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'logo_media_id');
+    }
+
+    /** @return BelongsTo<Media, $this> */
+    public function faviconMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'favicon_media_id');
     }
 
     /** @return HasMany<Service, $this> */

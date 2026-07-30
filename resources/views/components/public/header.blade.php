@@ -4,7 +4,7 @@
     $navigationItems = [
         ['key' => 'home', 'label' => __('company-profile.public.navigation.home'), 'url' => route('home')],
         ['key' => 'services', 'label' => __('company-profile.public.navigation.services'), 'url' => route('home').'#services'],
-        ['key' => 'projects', 'label' => __('company-profile.public.navigation.projects'), 'url' => route('home').'#projects'],
+        ['key' => 'projects', 'label' => __('company-profile.public.navigation.projects'), 'url' => route('projects.index')],
         ['key' => 'blog', 'label' => __('company-profile.public.navigation.blog'), 'url' => route('blog.index')],
         ['key' => 'pricing', 'label' => __('company-profile.public.navigation.pricing'), 'url' => route('pricing.index')],
     ];
@@ -16,9 +16,8 @@
         <nav class="navbar min-h-16 px-0" aria-label="{{ __('company-profile.public.navigation.main') }}">
             <div class="navbar-start">
                 <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5">
-                    <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#0aa8a7] text-white shadow-md shadow-teal-600/15">
-                        <span class="icon-[tabler--code] size-5"></span>
-                    </span>
+                    <x-public.brand-mark :profile="$profile"
+                        class="size-9 shrink-0 rounded-lg shadow-md shadow-teal-600/15" />
                     <span class="truncate text-base font-extrabold text-[#17212b]">
                         {{ $profile?->public_name ?? config('app.name') }}
                     </span>

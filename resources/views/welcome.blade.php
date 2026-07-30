@@ -1,8 +1,7 @@
 <x-public.layout :profile="$profile" :services="$services" :social-links="$socialLinks" active-page="home">
-    <x-public.hero :profile="$profile" :services="$services" :projects="$projects" />
+    <x-public.hero :profile="$profile" :services="$services" />
     <x-public.features :features="$features" />
     <x-public.services :services="$services" :profile="$profile" />
-    <x-public.projects :projects="$projects" />
     <x-public.experience :experiences="$experiences" />
     <x-public.skills :skills="$skills" />
     <x-public.testimonials :testimonials="$testimonials" />

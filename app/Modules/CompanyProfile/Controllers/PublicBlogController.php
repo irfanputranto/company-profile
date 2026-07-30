@@ -50,6 +50,8 @@ class PublicBlogController extends Controller
         return Profile::query()
             ->with([
                 'contentTranslations.language',
+                'logoMedia',
+                'faviconMedia',
                 'services' => fn ($query) => $query
                     ->with('contentTranslations.language')
                     ->where('is_active', true)

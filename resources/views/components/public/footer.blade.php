@@ -6,7 +6,7 @@
             <h2 class="font-extrabold text-[#17212b]">{{ __('company-profile.public.footer.navigation') }}</h2>
             <nav class="mt-5 grid gap-3 text-sm" aria-label="{{ __('company-profile.public.footer.navigation') }}">
                 <a class="hover:text-[#078786]" href="{{ route('home') }}">{{ __('company-profile.public.navigation.home') }}</a>
-                <a class="hover:text-[#078786]" href="{{ route('home') }}#projects">{{ __('company-profile.public.navigation.projects') }}</a>
+                <a class="hover:text-[#078786]" href="{{ route('projects.index') }}">{{ __('company-profile.public.navigation.projects') }}</a>
                 <a class="hover:text-[#078786]" href="{{ route('blog.index') }}">{{ __('company-profile.public.navigation.blog') }}</a>
                 <a class="hover:text-[#078786]" href="{{ route('pricing.index') }}">{{ __('company-profile.public.navigation.pricing') }}</a>
             </nav>
@@ -40,9 +40,7 @@
 
         <div>
             <div class="flex items-center gap-2.5">
-                <span class="flex size-9 items-center justify-center rounded-lg bg-[#0aa8a7] text-white">
-                    <span class="icon-[tabler--code] size-5"></span>
-                </span>
+                <x-public.brand-mark :profile="$profile" class="size-9 shrink-0 rounded-lg" />
                 <p class="text-lg font-extrabold text-[#17212b]">{{ $profile?->public_name ?? config('app.name') }}</p>
             </div>
             <p class="mt-4 text-sm leading-6">{{ __('company-profile.public.footer.description') }}</p>

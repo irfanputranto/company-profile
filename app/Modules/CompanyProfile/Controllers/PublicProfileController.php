@@ -14,6 +14,8 @@ class PublicProfileController extends Controller
         $profile = Profile::query()
             ->with([
                 'contentTranslations.language',
+                'logoMedia',
+                'faviconMedia',
                 'services' => fn ($query) => $query
                     ->with('contentTranslations.language')
                     ->where('is_active', true)
@@ -26,12 +28,6 @@ class PublicProfileController extends Controller
                     ->limit(6),
                 'features' => fn ($query) => $query
                     ->with('contentTranslations.language')
-                    ->where('is_active', true)
-                    ->orderByDesc('is_featured')
-                    ->orderBy('sort_order')
-                    ->limit(6),
-                'projects' => fn ($query) => $query
-                    ->with(['contentTranslations.language', 'skills.contentTranslations.language'])
                     ->where('is_active', true)
                     ->orderByDesc('is_featured')
                     ->orderBy('sort_order')
@@ -56,6 +52,9 @@ class PublicProfileController extends Controller
                     ->orderBy('sort_order')
                     ->limit(6),
             ])
+            ->withCount([
+                'projects as active_projects_count' => fn ($query) => $query->where('is_active', true),
+            ])
             ->where('is_active', true)
             ->first();
 
@@ -72,7 +71,6 @@ class PublicProfileController extends Controller
             'services' => $profile?->services ?? collect(),
             'skills' => $profile?->skills ?? collect(),
             'features' => $profile?->features ?? collect(),
-            'projects' => $profile?->projects ?? collect(),
             'experiences' => $profile?->experiences ?? collect(),
             'socialLinks' => $profile?->socialLinks ?? collect(),
             'testimonials' => $profile?->testimonials ?? collect(),

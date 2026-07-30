@@ -4,6 +4,7 @@ return [
     'public_routes' => [
         'home',
         'localized-home',
+        'projects.index',
         'blog.index',
         'blog.show',
         'pricing.index',
