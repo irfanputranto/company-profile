@@ -248,6 +248,11 @@ return array_replace_recursive($english, [
             'published' => 'Terbit',
             'archived' => 'Arsip',
         ],
+        'template' => [
+            'default' => 'Halaman standar',
+            'legal' => 'Dokumen legal',
+            'landing' => 'Landing page',
+        ],
         'billing_period' => [
             'project' => 'Per proyek',
             'month' => 'Per bulan',

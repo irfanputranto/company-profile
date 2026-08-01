@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             PersonalProfileSeeder::class,
             FeatureSeeder::class,
             PricingPlanSeeder::class,
+            PopularContentSeeder::class,
             PersonalProfileTranslationSeeder::class,
         ]);
     }

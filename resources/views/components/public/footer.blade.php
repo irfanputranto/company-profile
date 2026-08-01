@@ -6,9 +6,15 @@
             <h2 class="font-extrabold text-[#17212b]">{{ __('company-profile.public.footer.navigation') }}</h2>
             <nav class="mt-5 grid gap-3 text-sm" aria-label="{{ __('company-profile.public.footer.navigation') }}">
                 <a class="hover:text-[#078786]" href="{{ route('home') }}">{{ __('company-profile.public.navigation.home') }}</a>
+                <a class="hover:text-[#078786]" href="{{ route('about') }}">{{ __('company-profile.public.navigation.about') }}</a>
                 <a class="hover:text-[#078786]" href="{{ route('projects.index') }}">{{ __('company-profile.public.navigation.projects') }}</a>
                 <a class="hover:text-[#078786]" href="{{ route('blog.index') }}">{{ __('company-profile.public.navigation.blog') }}</a>
                 <a class="hover:text-[#078786]" href="{{ route('pricing.index') }}">{{ __('company-profile.public.navigation.pricing') }}</a>
+                @foreach($navigationPages as $navigationPage)
+                    <a class="hover:text-[#078786]" href="{{ route('pages.show', $navigationPage) }}">
+                        {{ $navigationPage->translated('title') }}
+                    </a>
+                @endforeach
             </nav>
         </div>
 

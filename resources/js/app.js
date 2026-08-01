@@ -149,6 +149,104 @@ Alpine.data('dataTableFilters', () => ({
     },
 }));
 
+Alpine.data('projectKanban', () => ({
+    draggedCard: null,
+    originColumn: null,
+    activeStatus: null,
+    saving: false,
+    error: '',
+    startDrag(event) {
+        this.draggedCard = event.currentTarget;
+        this.originColumn = this.draggedCard.closest('[data-kanban-column]');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', this.draggedCard.dataset.featureId);
+        requestAnimationFrame(() => this.draggedCard?.classList.add('opacity-40'));
+    },
+    endDrag() {
+        this.draggedCard?.classList.remove('opacity-40');
+        this.draggedCard = null;
+        this.originColumn = null;
+        this.activeStatus = null;
+    },
+    async dropCard(event, status) {
+        const card = this.draggedCard;
+
+        if (!card || card.dataset.currentStatus === status || this.saving) {
+            this.endDrag();
+
+            return;
+        }
+
+        await this.moveCard(card, event.currentTarget, status);
+        this.endDrag();
+    },
+    async moveFromSelect(event) {
+        const card = event.currentTarget.closest('[data-kanban-card]');
+        const status = event.currentTarget.value;
+        const targetColumn = this.$root.querySelector(`[data-kanban-column][data-status="${status}"]`);
+
+        if (!card || !targetColumn || card.dataset.currentStatus === status || this.saving) {
+            return;
+        }
+
+        await this.moveCard(card, targetColumn, status);
+    },
+    async moveCard(card, targetColumn, status) {
+        const originalColumn = card.closest('[data-kanban-column]');
+        const originalStatus = card.dataset.currentStatus;
+        const targetList = targetColumn.querySelector('[data-card-list]');
+        const originalSelect = card.querySelector('[data-status-select]');
+
+        this.error = '';
+        this.saving = true;
+        targetList.append(card);
+        card.dataset.currentStatus = status;
+        originalSelect.value = status;
+        this.updateCounts();
+
+        try {
+            const response = await window.fetch(card.dataset.moveUrl, {
+                method: 'PATCH',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    status,
+                    sort_order: targetList.querySelectorAll('[data-kanban-card]').length,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Kanban move failed');
+            }
+
+            const payload = await response.json();
+            this.applyPhaseProgress(payload.phase);
+        } catch {
+            originalColumn.querySelector('[data-card-list]').append(card);
+            card.dataset.currentStatus = originalStatus;
+            originalSelect.value = originalStatus;
+            this.error = this.$root.dataset.moveError;
+        } finally {
+            this.saving = false;
+            this.updateCounts();
+        }
+    },
+    updateCounts() {
+        this.$root.querySelectorAll('[data-kanban-column]').forEach(column => {
+            column.querySelector('[data-card-count]').textContent = column.querySelectorAll('[data-kanban-card]').length;
+            column.querySelector('[data-empty-state]').classList.toggle('hidden', column.querySelectorAll('[data-kanban-card]').length > 0);
+        });
+    },
+    applyPhaseProgress(phase) {
+        this.$root.querySelectorAll(`[data-phase-progress="${phase.id}"]`).forEach(element => {
+            element.textContent = `${phase.progress}%`;
+        });
+    },
+}));
+
 Alpine.data('sidebarLayout', () => ({
     sidebarCollapsed: false,
     pageGuideOpen: false,
@@ -297,6 +395,7 @@ document.addEventListener('click', event => {
 Alpine.data('publicNavigation', (initialPage = 'home') => ({
     active: initialPage,
     open: false,
+    moreOpen: false,
     observer: null,
     trackedSections: new Set(),
     init() {
@@ -326,6 +425,13 @@ Alpine.data('publicNavigation', (initialPage = 'home') => ({
     },
     activate(page) {
         this.active = page;
+        this.moreOpen = false;
+    },
+    toggleMore() {
+        this.moreOpen = !this.moreOpen;
+    },
+    closeMore() {
+        this.moreOpen = false;
     },
     trackSection(section) {
         if (this.trackedSections.has(section)) {

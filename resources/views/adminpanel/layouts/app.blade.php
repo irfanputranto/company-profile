@@ -1,4 +1,4 @@
-@props(['title', 'fullscreen' => false, 'kiosk' => false])
+@props(['title', 'fullscreen' => false, 'kiosk' => false, 'wide' => false])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ config('theme.default') }}" data-theme-default="{{ config('theme.default') }}"
@@ -44,8 +44,10 @@
             @endunless>
             <!-- Content -->
             <main @class([
-                'mx-auto w-full max-w-[1280px] flex-1 grow space-y-5 p-4 sm:space-y-6 sm:p-5 lg:p-6',
+                'mx-auto w-full flex-1 grow space-y-5 p-4 sm:space-y-6 sm:p-5 lg:p-6',
+                'max-w-[1280px]' => ! $wide && ! $kiosk,
                 'max-w-none p-2 sm:p-3 lg:min-h-0 lg:overflow-hidden' => $kiosk,
+                'max-w-none' => $wide,
                 'lg:min-h-0 lg:overflow-hidden' => $fullscreen && ! $kiosk,
             ])>
                 <!-- Stats -->

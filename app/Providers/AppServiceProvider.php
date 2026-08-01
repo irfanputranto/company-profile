@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Modules\CompanyProfile\Services\PublicContentPageNavigation;
 use App\Modules\CompanyProfile\View\Components\LanguageSwitcher;
+use App\Notifications\ProjectServerExpiryNotification;
 use App\Services\PageGuideResolver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Middleware\TrustProxies;
@@ -19,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->scoped(PublicContentPageNavigation::class);
     }
 
     public function boot(): void
@@ -35,7 +37,29 @@ class AppServiceProvider extends ServiceProvider
         $pageGuideResolver = $this->app->make(PageGuideResolver::class);
         View::composer('adminpanel.layouts.header', function (IlluminateView $view) use ($pageGuideResolver): void {
             $view->with('pageGuide', $pageGuideResolver->resolve(request()->route()?->getName()));
+            $user = auth()->user();
+            $notifications = collect();
+            $notificationsCount = 0;
+
+            if ($user) {
+                $notificationQuery = $user->unreadNotifications()->where('type', ProjectServerExpiryNotification::class);
+                $notificationsCount = (clone $notificationQuery)->count();
+                $notifications = (clone $notificationQuery)->latest()->limit(5)->get();
+            }
+
+            $view->with('projectNotifications', $notifications);
+            $view->with('projectNotificationsCount', $notificationsCount);
         });
+
+        View::composer(
+            ['components.public.header', 'components.public.footer'],
+            function (IlluminateView $view): void {
+                $view->with(
+                    'navigationPages',
+                    $this->app->make(PublicContentPageNavigation::class)->pages(),
+                );
+            },
+        );
 
         RateLimiter::for('login', function (Request $request): array {
             $login = Str::lower($request->string('login')->trim()->toString());

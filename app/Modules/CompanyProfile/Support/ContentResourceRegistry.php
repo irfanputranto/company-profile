@@ -408,7 +408,11 @@ class ContentResourceRegistry
                     self::select('author_id', 'Penulis', User::class, 'name', ['nullable', 'integer'], list: false),
                     self::text('title', 'Judul', ['required', 'string', 'max:255'], list: true),
                     self::text('slug', 'Slug', ['nullable', 'string', 'max:255'], unique: 'slug'),
-                    self::text('template', 'Template', ['required', 'string', 'max:255'], list: true),
+                    self::selectChoices('template', 'Template', [
+                        'default' => 'Halaman standar',
+                        'legal' => 'Dokumen legal',
+                        'landing' => 'Landing page',
+                    ], ['required', 'string'], list: true),
                     self::textarea('content', 'Konten', ['nullable', 'string']),
                     self::selectChoices('status', 'Status', $publicationStatus, ['required', 'string'], list: true),
                     self::checkbox('show_in_navigation', 'Tampilkan di navigasi', list: true),

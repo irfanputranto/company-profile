@@ -9,7 +9,7 @@
         <img class="mx-auto w-full max-w-sm" src="{{ asset('vendor/bigspring/images/cta.svg') }}" alt="" loading="lazy" width="325" height="206">
         <div class="text-center md:text-start">
             <h2 class="bs-heading text-3xl sm:text-4xl">{{ __('company-profile.public.cta.title') }}</h2>
-            <p class="mt-5 leading-8">{{ $profile?->translated('about') ?: __('company-profile.public.cta.description') }}</p>
+            <p class="mt-5 leading-8">{{ __('company-profile.public.cta.description') }}</p>
             <div class="mt-7 flex flex-wrap justify-center gap-3 md:justify-start">
                 <a href="{{ $whatsappUrl ?? ($profile?->email ? 'mailto:'.$profile->email : route('login')) }}"
                     @if ($whatsappUrl) target="_blank" rel="noopener noreferrer" @endif

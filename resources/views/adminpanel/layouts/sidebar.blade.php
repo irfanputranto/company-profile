@@ -72,6 +72,24 @@
                         @endforeach
                     @endif
 
+                    @canany(['view_client_companies', 'view_managed_projects'])
+                        <li class="menu-title mt-3 px-2 text-xs uppercase tracking-wider">{{ __('project-management.navigation.title') }}</li>
+                        @can('view_managed_projects')
+                            <li>
+                                <a href="{{ route('project-management.projects.index') }}" class="{{ request()->routeIs('project-management.projects.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[tabler--briefcase] size-4.5"></span><span>{{ __('project-management.navigation.projects') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('view_client_companies')
+                            <li>
+                                <a href="{{ route('project-management.companies.index') }}" class="{{ request()->routeIs('project-management.companies.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[tabler--building] size-4.5"></span><span>{{ __('project-management.navigation.companies') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+                    @endcanany
+
                     @canany(['view_users', 'view_roles', 'view_permissions'])
                         <li class="menu-title mt-3 px-2 text-xs uppercase tracking-wider">{{ __('admin.navigation.access_management') }}</li>
                         @can('view_users')

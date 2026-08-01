@@ -267,6 +267,11 @@ return [
             'published' => 'Published',
             'archived' => 'Archived',
         ],
+        'template' => [
+            'default' => 'Standard page',
+            'legal' => 'Legal document',
+            'landing' => 'Landing page',
+        ],
         'billing_period' => [
             'project' => 'Per project',
             'month' => 'Per month',

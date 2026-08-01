@@ -13,6 +13,36 @@
             <div class="navbar-end items-center gap-3">
                 <x-language-switcher />
 
+                @can('view_managed_projects')
+                    <div class="dropdown relative inline-flex [--offset:8] [--placement:bottom-end]">
+                        <button type="button" class="dropdown-toggle btn btn-soft btn-square btn-sm relative" aria-label="{{ __('project-management.notifications.title') }}">
+                            <span class="icon-[tabler--bell] size-5"></span>
+                            @if ($projectNotificationsCount > 0)
+                                <span class="badge badge-error badge-sm absolute -end-2 -top-2 min-w-5 px-1 text-[10px]">{{ min($projectNotificationsCount, 99) }}</span>
+                            @endif
+                        </button>
+                        <div class="dropdown-menu dropdown-open:opacity-100 hidden w-88 max-w-[calc(100vw-2rem)] p-2" role="menu">
+                            <div class="flex items-center justify-between gap-3 px-3 py-2">
+                                <p class="font-semibold">{{ __('project-management.notifications.title') }}</p>
+                                @if ($projectNotificationsCount > 0)
+                                    <form method="POST" action="{{ route('project-management.notifications.read-all') }}">@csrf<button class="link link-primary text-xs">{{ __('project-management.notifications.read_all') }}</button></form>
+                                @endif
+                            </div>
+                            @forelse ($projectNotifications as $notification)
+                                <form method="POST" action="{{ route('project-management.notifications.read', $notification->id) }}">
+                                    @csrf
+                                    <button class="hover:bg-base-200 flex w-full gap-3 rounded-lg px-3 py-2 text-start">
+                                        <span class="icon-[tabler--server-2] text-warning mt-0.5 size-5 shrink-0"></span>
+                                        <span class="min-w-0"><span class="block truncate text-sm font-medium">{{ $notification->data['server_name'] }}</span><span class="text-base-content/60 block text-xs">{{ __('project-management.notifications.expires', ['date' => $notification->data['expires_at']]) }}</span></span>
+                                    </button>
+                                </form>
+                            @empty
+                                <p class="text-base-content/60 px-3 py-5 text-center text-sm">{{ __('project-management.notifications.empty') }}</p>
+                            @endforelse
+                        </div>
+                    </div>
+                @endcan
+
                 <div class="dropdown relative inline-flex [--offset:8] [--placement:bottom-end]">
                     <button id="theme-dropdown" type="button" class="dropdown-toggle btn btn-soft btn-sm gap-2"
                         aria-haspopup="menu" aria-expanded="false" aria-label="{{ __('admin.header.change_theme') }}">

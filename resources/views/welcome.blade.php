@@ -2,7 +2,6 @@
     <x-public.hero :profile="$profile" :services="$services" />
     <x-public.features :features="$features" />
     <x-public.services :services="$services" :profile="$profile" />
-    <x-public.experience :experiences="$experiences" />
     <x-public.skills :skills="$skills" />
     <x-public.testimonials :testimonials="$testimonials" />
     <x-public.articles :articles="$articles" />

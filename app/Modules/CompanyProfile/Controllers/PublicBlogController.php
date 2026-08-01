@@ -5,6 +5,7 @@ namespace App\Modules\CompanyProfile\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Profile;
+use App\Modules\CompanyProfile\Services\ArticleContentFormatter;
 use Illuminate\View\View;
 
 class PublicBlogController extends Controller
@@ -27,21 +28,41 @@ class PublicBlogController extends Controller
         ]);
     }
 
-    public function show(Article $article): View
+    public function show(Article $article, ArticleContentFormatter $contentFormatter): View
     {
         abort_unless(
             $article->status === 'published' && $article->published_at?->isPast(),
             404,
         );
 
-        $article->load('contentTranslations.language');
+        $article->load([
+            'author:id,uuid,name,username,updated_at',
+            'category.contentTranslations.language',
+            'contentTranslations.language',
+            'seoMetadata.contentTranslations.language',
+            'tags.contentTranslations.language',
+        ]);
         $profile = $this->profile();
+        $relatedArticles = Article::query()
+            ->with(['category.contentTranslations.language', 'contentTranslations.language'])
+            ->where('status', 'published')
+            ->where('published_at', '<=', now())
+            ->whereKeyNot($article->getKey())
+            ->when(
+                $article->article_category_id,
+                fn ($query, int $categoryId) => $query->where('article_category_id', $categoryId),
+            )
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
 
         return view('public.blog.show', [
             'profile' => $profile,
             'services' => $profile?->services ?? collect(),
             'socialLinks' => $profile?->socialLinks ?? collect(),
             'article' => $article,
+            'formattedContent' => $contentFormatter->format((string) $article->translated('content')),
+            'relatedArticles' => $relatedArticles,
         ]);
     }
 

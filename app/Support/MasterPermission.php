@@ -30,11 +30,17 @@ class MasterPermission
         'seo_metadata',
         'media',
         'languages',
+        'client_companies',
+        'managed_projects',
     ];
 
     public const LEGACY_PERMISSIONS = [
         'manage users',
         'manage permissions',
+    ];
+
+    public const SPECIAL_PERMISSIONS = [
+        'show_project_credentials',
     ];
 
     /** @return list<string> */
@@ -45,6 +51,7 @@ class MasterPermission
                 fn (string $action): string => self::name($action, $resource),
                 self::ACTIONS,
             ))
+            ->concat(self::SPECIAL_PERMISSIONS)
             ->values()
             ->all();
     }

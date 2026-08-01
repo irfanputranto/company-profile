@@ -32,11 +32,6 @@ class PublicProfileController extends Controller
                     ->orderByDesc('is_featured')
                     ->orderBy('sort_order')
                     ->limit(6),
-                'experiences' => fn ($query) => $query
-                    ->with('contentTranslations.language')
-                    ->where('is_active', true)
-                    ->latest('started_at')
-                    ->limit(5),
                 'socialLinks' => fn ($query) => $query
                     ->where('is_active', true)
                     ->orderBy('sort_order'),
@@ -71,7 +66,6 @@ class PublicProfileController extends Controller
             'services' => $profile?->services ?? collect(),
             'skills' => $profile?->skills ?? collect(),
             'features' => $profile?->features ?? collect(),
-            'experiences' => $profile?->experiences ?? collect(),
             'socialLinks' => $profile?->socialLinks ?? collect(),
             'testimonials' => $profile?->testimonials ?? collect(),
             'faqs' => $profile?->faqs ?? collect(),

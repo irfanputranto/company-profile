@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasContentTranslations;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class SeoMetadata extends AuditableModel
 {
@@ -23,5 +25,11 @@ class SeoMetadata extends AuditableModel
             'robots_follow' => 'boolean',
             'structured_data' => 'array',
         ];
+    }
+
+    /** @return MorphTo<Model, $this> */
+    public function seoable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

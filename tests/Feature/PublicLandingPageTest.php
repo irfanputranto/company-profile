@@ -150,11 +150,13 @@ it('renders the Bigspring-inspired landing page from company profile models with
         $this->get(route('home'))
             ->assertSuccessful()
             ->assertSee('Building dependable digital products')
+            ->assertDontSee('I help teams turn complex product requirements into maintainable software.')
+            ->assertSee(route('about'), false)
             ->assertSee('Backend Engineering')
             ->assertSee('Laravel')
             ->assertDontSee('Scalable Platform')
             ->assertSee(route('projects.index'), false)
-            ->assertSee('Senior Backend Engineer')
+            ->assertDontSee('Senior Backend Engineer')
             ->assertSee('Dependable delivery with thoughtful technical decisions.')
             ->assertSee('Production Laravel')
             ->assertSee('What kind of projects do you take?')
@@ -164,6 +166,25 @@ it('renders the Bigspring-inspired landing page from company profile models with
             ->assertSee('Chat on WhatsApp')
             ->assertSee('icon-[tabler--brand-whatsapp]')
             ->assertSee('bigspring-home');
+    } finally {
+        Model::preventLazyLoading(false);
+    }
+});
+
+it('renders about content on its own page', function (): void {
+    Model::preventLazyLoading();
+
+    try {
+        $this->get(route('about'))
+            ->assertSuccessful()
+            ->assertSee('I help teams turn complex product requirements into maintainable software.')
+            ->assertSee('Backend engineering, integration, and performance.')
+            ->assertSee('Senior Backend Engineer')
+            ->assertSee('Leading backend architecture and delivery.')
+            ->assertSee('Career journey and professional experience')
+            ->assertSee('publicNavigation(\'about\')', false)
+            ->assertSee(route('projects.index'), false)
+            ->assertSee(route('home').'#contact', false);
     } finally {
         Model::preventLazyLoading(false);
     }

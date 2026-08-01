@@ -7,7 +7,7 @@
     $contactUrl = $whatsappUrl ?? ($profile?->email ? 'mailto:'.$profile->email : '#contact');
 @endphp
 
-<section id="about" class="bs-section relative" data-nav-section="home">
+<section id="home" class="bs-section relative" data-nav-section="home">
     <div class="pointer-events-none absolute start-0 top-8 size-72 rounded-full bg-teal-200/25 blur-3xl"></div>
     <div class="bs-container relative text-center">
         <div class="mx-auto max-w-4xl" data-reveal>

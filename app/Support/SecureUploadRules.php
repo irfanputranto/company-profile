@@ -34,4 +34,16 @@ class SecureUploadRules
             'max:'.config('uploads.max_file_size_kb'),
         ];
     }
+
+    /** @return array<int, string> */
+    public static function document(): array
+    {
+        return [
+            'required',
+            'file',
+            'mimes:pdf,doc,docx,xls,xlsx,csv,txt,zip,png,jpg,jpeg,webp',
+            'mimetypes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/zip,application/x-zip-compressed,image/png,image/jpeg,image/webp',
+            'max:'.config('uploads.max_file_size_kb'),
+        ];
+    }
 }
