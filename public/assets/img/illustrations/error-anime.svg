@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 620" role="img" aria-labelledby="title description">
+  <title id="title">Anime-style system guide</title>
+  <description id="description">An original anime-style character floating beside a small portal and a laptop.</description>
+  <defs>
+    <linearGradient id="portal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#29c5bd"/>
+      <stop offset="1" stop-color="#087f7d"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#0aa8a7"/>
+      <stop offset="1" stop-color="#066b69"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#263842"/>
+      <stop offset="1" stop-color="#17212b"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#087f7d" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <style>
+    .float { animation: float 4.8s ease-in-out infinite; transform-origin: center; }
+    .orbit { animation: orbit 12s linear infinite; transform-origin: 358px 300px; }
+    .blink { animation: blink 5s ease-in-out infinite; transform-origin: center; }
+    @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+    @keyframes orbit { to { transform: rotate(360deg) } }
+    @keyframes blink { 0%,45%,48%,100% { transform: scaleY(1) } 46%,47% { transform: scaleY(.08) } }
+    @media (prefers-reduced-motion: reduce) { .float,.orbit,.blink { animation: none } }
+  </style>
+
+  <ellipse cx="360" cy="558" rx="210" ry="26" fill="#087f7d" opacity=".1"/>
+  <circle cx="351" cy="294" r="226" fill="#fff" opacity=".72"/>
+  <circle cx="351" cy="294" r="196" fill="none" stroke="url(#portal)" stroke-width="3" stroke-dasharray="10 16" opacity=".38"/>
+  <g class="orbit" fill="none" stroke-linecap="round">
+    <path d="M112 219c43-97 131-157 242-159" stroke="#0aa8a7" stroke-width="5"/>
+    <path d="M546 133c35 34 59 75 72 120" stroke="#ff7b6d" stroke-width="8"/>
+    <circle cx="113" cy="217" r="10" fill="#ff7b6d" stroke="none"/>
+    <path d="M597 365c-25 75-82 133-157 160" stroke="#0aa8a7" stroke-width="5"/>
+  </g>
+
+  <g class="float" filter="url(#shadow)">
+    <path d="M252 236c5-92 60-151 142-145 73 5 119 64 105 148-7 42-25 68-48 87H286c-25-25-38-53-34-90Z" fill="#20303a"/>
+    <path d="M292 207c12-70 72-102 128-76 40 18 57 66 43 116-12 43-48 72-91 71-51-2-90-48-80-111Z" fill="#ffd9c7"/>
+    <path d="M287 214c14-83 79-119 145-81 21 12 36 31 44 54-44-7-82-25-109-53-13 37-42 66-82 83l2-3Z" fill="#263842"/>
+    <path d="M431 146c25 30 36 66 27 106 27-17 43-48 42-86-1-46-29-78-73-88-25-6-54-2-75 10 33 3 60 22 79 58Z" fill="#17212b"/>
+    <path d="M309 187c-9 7-16 18-19 32" fill="none" stroke="#ffb49e" stroke-width="7" stroke-linecap="round"/>
+    <g class="blink" fill="#17212b">
+      <ellipse cx="342" cy="235" rx="8" ry="12"/>
+      <ellipse cx="417" cy="235" rx="8" ry="12"/>
+    </g>
+    <path d="M369 273c13 9 26 9 39-1" fill="none" stroke="#c76a68" stroke-width="5" stroke-linecap="round"/>
+    <path d="M318 248c-9-2-18 1-25 7M440 252c9-2 18 0 25 6" fill="none" stroke="#ff9d91" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+
+    <path d="M287 326c29-28 66-42 106-40 53 2 92 30 112 84l34 105H232l18-104c4-19 16-34 37-45Z" fill="url(#coat)"/>
+    <path d="M324 305c12 28 36 44 66 44 31 0 54-16 65-44l-24-13c-5 18-19 28-41 28-20 0-35-10-42-29l-24 14Z" fill="#f4fffd"/>
+    <path d="M293 354c-24 15-41 42-51 80M487 354c23 20 39 46 47 78" fill="none" stroke="#055f5e" stroke-width="18" stroke-linecap="round"/>
+
+    <path d="M230 390h276c10 0 18 8 18 18v125H212V408c0-10 8-18 18-18Z" fill="url(#screen)"/>
+    <path d="M231 409h274v105H231z" fill="#203540"/>
+    <circle cx="368" cy="462" r="25" fill="#0aa8a7" opacity=".22"/>
+    <path d="m357 465 8 8 17-22" fill="none" stroke="#75e0d9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M183 533h370c0 16-13 29-29 29H212c-16 0-29-13-29-29Z" fill="#17212b"/>
+    <path d="M324 533h88c0 8-6 14-14 14h-60c-8 0-14-6-14-14Z" fill="#48606b"/>
+  </g>
+
+  <g fill="#ff7b6d">
+    <path d="m118 358 7 17 17 7-17 7-7 17-7-17-17-7 17-7 7-17Z"/>
+    <path d="m596 303 5 12 12 5-12 5-5 12-5-12-12-5 12-5 5-12Z"/>
+  </g>
+  <g fill="#0aa8a7">
+    <circle cx="583" cy="183" r="8"/>
+    <circle cx="151" cy="300" r="6"/>
+    <circle cx="541" cy="91" r="5" opacity=".55"/>
+  </g>
+</svg>
