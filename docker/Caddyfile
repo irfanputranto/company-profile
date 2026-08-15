@@ -8,7 +8,7 @@
 	encode zstd br gzip
 	log
 
-	@privateFiles path /.env* /composer.* /package*.json /artisan /vite.config.js /vendor/*
+	@privateFiles path /.env* /composer.* /package*.json /artisan /vite.config.js
 	respond @privateFiles 404
 
 	@assets path /build/*
