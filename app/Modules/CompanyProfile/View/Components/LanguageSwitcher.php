@@ -11,6 +11,7 @@ class LanguageSwitcher extends Component
     public function __construct(
         private LanguageResolver $resolver,
         public bool $dark = false,
+        public bool $withFlags = false,
     ) {}
 
     public function render(): View

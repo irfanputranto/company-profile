@@ -68,6 +68,29 @@ it('menggunakan bahasa default dan mempertahankan pilihan yang sama di web serta
         ->assertSee('<html lang="id"', false);
 });
 
+it('menampilkan pemilih bahasa berbendera di header publik dan mengganti bahasa aktif', function (): void {
+    $this->get(route('home'))
+        ->assertSuccessful()
+        ->assertSee('data-public-language-switcher', false)
+        ->assertSee('🇮🇩')
+        ->assertSee('🇬🇧')
+        ->assertSee('data-language-code="id"', false)
+        ->assertSee('data-language-code="en"', false)
+        ->assertSee('<html lang="id"', false)
+        ->assertSee('Membangun produk web yang cepat, aman, dan siap berkembang.');
+
+    $this->from(route('home'))
+        ->post(route('locale.switch', $this->english))
+        ->assertRedirect(route('home'))
+        ->assertSessionHas('site_locale', 'en');
+
+    $this->get(route('home'))
+        ->assertSuccessful()
+        ->assertSee('<html lang="en"', false)
+        ->assertSee('Building fast, secure, and scalable web products.')
+        ->assertSee('aria-current="true"', false);
+});
+
 it('menerjemahkan shell dan form company profile di admin sesuai bahasa aktif', function (): void {
     $this->withSession(['site_locale' => 'en'])
         ->actingAs($this->administrator)

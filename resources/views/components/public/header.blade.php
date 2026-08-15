@@ -72,7 +72,7 @@
             </div>
 
             <div class="flex items-center justify-end gap-2 lg:justify-self-end">
-                <x-language-switcher />
+                <x-language-switcher with-flags />
                 @auth
                     <a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm hidden rounded-full px-5 sm:inline-flex">
                         {{ __('company-profile.public.navigation.dashboard') }}
