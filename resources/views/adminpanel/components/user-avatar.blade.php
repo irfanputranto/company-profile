@@ -21,12 +21,14 @@
 @endphp
 
 <span x-data="{ failed: false }" {{ $attributes->merge(['class' => "avatar avatar-placeholder shrink-0 {$sizeClass}"]) }}>
-    <span class="bg-primary text-primary-content size-full rounded-full font-semibold">
+    <span class="relative size-full overflow-hidden rounded-full font-semibold">
         @if ($imageUrl)
             <img x-show="!failed" src="{{ $imageUrl }}" alt="{{ __('admin.upload.profile_title') }} {{ $displayName }}"
-                class="size-full rounded-full object-cover" x-on:error="failed = true">
+                class="absolute inset-0 size-full rounded-full object-cover" x-on:error="failed = true">
         @endif
-        <span x-show="{{ $imageUrl ? 'failed' : 'true' }}" aria-hidden="true">{{ $initials }}</span>
+        <span x-show="{{ $imageUrl ? 'failed' : 'true' }}" @if ($imageUrl) x-cloak @endif
+            class="bg-primary text-primary-content absolute inset-0 flex size-full items-center justify-center rounded-full"
+            aria-hidden="true">{{ $initials }}</span>
         <span class="sr-only">{{ __('admin.upload.profile_title') }} {{ $displayName }}</span>
     </span>
 </span>

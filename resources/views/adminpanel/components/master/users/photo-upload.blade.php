@@ -38,7 +38,7 @@
     }" class="rounded-xl border border-base-content/10 bg-base-200/30 p-4 sm:p-5">
         <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
             <div class="relative size-24 shrink-0">
-                <x-adminpanel::components.user-avatar :user="$user" size="xl" class="size-24" />
+                <x-adminpanel::components.user-avatar x-show="!preview" :user="$user" size="xl" class="size-24" />
                 <img x-show="preview" x-cloak :src="preview" alt="{{ __('admin.upload.profile_preview') }}"
                     class="absolute inset-0 size-24 rounded-full border-4 border-base-100 object-cover shadow-md">
                 <span class="bg-primary text-primary-content absolute end-0 bottom-0 flex size-8 items-center justify-center rounded-full border-2 border-base-100">
