@@ -149,6 +149,7 @@ it('renders the Bigspring-inspired landing page from company profile models with
     try {
         $this->get(route('home'))
             ->assertSuccessful()
+            ->assertSee('<meta name="description" content="Backend engineering, integration, and performance.">', false)
             ->assertSee('Building dependable digital products')
             ->assertDontSee('I help teams turn complex product requirements into maintainable software.')
             ->assertSee(route('about'), false)

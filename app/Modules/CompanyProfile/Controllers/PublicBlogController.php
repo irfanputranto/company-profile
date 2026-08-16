@@ -15,8 +15,7 @@ class PublicBlogController extends Controller
         $profile = $this->profile();
         $articles = Article::query()
             ->with('contentTranslations.language')
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->publiclyVisible()
             ->latest('published_at')
             ->paginate(9);
 
@@ -30,10 +29,7 @@ class PublicBlogController extends Controller
 
     public function show(Article $article, ArticleContentFormatter $contentFormatter): View
     {
-        abort_unless(
-            $article->status === 'published' && $article->published_at?->isPast(),
-            404,
-        );
+        abort_unless($article->isPubliclyVisible(), 404);
 
         $article->load([
             'author:id,uuid,name,username,updated_at',
@@ -45,8 +41,7 @@ class PublicBlogController extends Controller
         $profile = $this->profile();
         $relatedArticles = Article::query()
             ->with(['category.contentTranslations.language', 'contentTranslations.language'])
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->publiclyVisible()
             ->whereKeyNot($article->getKey())
             ->when(
                 $article->article_category_id,

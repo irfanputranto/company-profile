@@ -1,6 +1,6 @@
 @php
     $pageTitle = $page->translated('title');
-    $pageDescription = str($page->translated('content'))->squish()->limit(180)->toString();
+    $pageDescription = $page->translated('content');
     $isLegal = $template === 'legal';
     $isLanding = $template === 'landing';
 @endphp

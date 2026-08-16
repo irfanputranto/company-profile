@@ -12,11 +12,19 @@
 @php
     $fallbackTitle = ($profile?->public_name ?? config('app.name')).' | '.($title ?? __('company-profile.public.hero.marketing_title'));
     $pageTitle = $seo?->translated('meta_title') ?: $fallbackTitle;
-    $pageDescription = $seo?->translated('meta_description') ?: ($description ?? __('company-profile.public.hero.marketing_description'));
+    $pageDescription = App\Support\MetaDescription::make(
+        $seo?->translated('meta_description'),
+        $description,
+        $profile?->translated('short_bio'),
+        __('company-profile.public.hero.marketing_description'),
+    );
     $canonicalUrl = $seo?->canonical_url ?: url()->current();
     $robots = (($seo?->robots_index ?? true) ? 'index' : 'noindex').','.(($seo?->robots_follow ?? true) ? 'follow' : 'nofollow');
     $openGraphTitle = $seo?->translated('open_graph_title') ?: $pageTitle;
-    $openGraphDescription = $seo?->translated('open_graph_description') ?: $pageDescription;
+    $openGraphDescription = App\Support\MetaDescription::make(
+        $seo?->translated('open_graph_description'),
+        $pageDescription,
+    );
     $structuredData = $seo?->structured_data
         ? json_encode($seo->structured_data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)
         : null;

@@ -80,6 +80,7 @@ if [ "$app_environment" = "production" ]; then
     php artisan event:cache --no-interaction
 
     if [ "$role" = "app" ] || [ "$role" = "all" ]; then
+        php artisan storage:link --force --no-interaction
         php artisan view:cache --no-interaction
     fi
 fi

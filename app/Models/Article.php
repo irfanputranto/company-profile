@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasContentTranslations;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -25,6 +26,20 @@ class Article extends AuditableModel
             'reading_time_minutes' => 'integer',
             'published_at' => 'datetime',
         ];
+    }
+
+    /** @param Builder<Article> $query */
+    public function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query
+            ->where('status', 'published')
+            ->where('published_at', '<=', now());
+    }
+
+    public function isPubliclyVisible(): bool
+    {
+        return $this->status === 'published'
+            && $this->published_at?->isPast() === true;
     }
 
     /** @return BelongsTo<User, $this> */

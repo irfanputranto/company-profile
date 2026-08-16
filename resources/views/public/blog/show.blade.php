@@ -1,6 +1,6 @@
 @php
     $articleTitle = $article->translated('title');
-    $articleExcerpt = $article->translated('excerpt');
+    $articleDescription = $article->translated('excerpt') ?: $article->translated('content');
     $categoryName = $article->category?->translated('name') ?? __('company-profile.public.blog.category_fallback');
     $authorName = $profile?->user_id === $article->author_id
         ? $profile->public_name
@@ -13,7 +13,7 @@
 @endphp
 
 <x-public.layout :profile="$profile" :services="$services" :social-links="$socialLinks" active-page="blog"
-    :title="$articleTitle" :description="$articleExcerpt" :seo="$article->seoMetadata" open-graph-type="article">
+    :title="$articleTitle" :description="$articleDescription" :seo="$article->seoMetadata" open-graph-type="article">
     <article>
         <header class="relative overflow-hidden border-b border-[#dcebea] bg-gradient-to-b from-[#edf8f7] via-white to-white py-12 sm:py-16">
             <div class="pointer-events-none absolute -start-24 top-5 size-72 rounded-full bg-[#0aa8a7]/10 blur-3xl"></div>

@@ -55,8 +55,7 @@ class PublicProfileController extends Controller
 
         $articles = Article::query()
             ->with('contentTranslations.language')
-            ->where('status', 'published')
-            ->where('published_at', '<=', now())
+            ->publiclyVisible()
             ->latest('published_at')
             ->limit(3)
             ->get();

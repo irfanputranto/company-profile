@@ -7,8 +7,10 @@ use App\Modules\CompanyProfile\Controllers\PublicContentPageController;
 use App\Modules\CompanyProfile\Controllers\PublicPricingController;
 use App\Modules\CompanyProfile\Controllers\PublicProfileController;
 use App\Modules\CompanyProfile\Controllers\PublicProjectController;
+use App\Modules\CompanyProfile\Controllers\PublicSitemapController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/sitemap.xml', PublicSitemapController::class)->name('sitemap');
 Route::get('/', PublicProfileController::class)->name('home');
 Route::get('/about', PublicAboutController::class)->name('about');
 Route::get('/projects', PublicProjectController::class)->name('projects.index');

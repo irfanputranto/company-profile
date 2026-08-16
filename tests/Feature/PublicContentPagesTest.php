@@ -149,6 +149,7 @@ it('menampilkan daftar artikel dan hanya membuka artikel yang sudah terbit', fun
 
     $this->get(route('blog.show', $publishedArticle))
         ->assertSuccessful()
+        ->assertSee('<meta name="description" content="Panduan memulai aplikasi custom.">', false)
         ->assertSee('Mulai dari masalah bisnis')
         ->assertSee('Panduan memulai aplikasi custom.')
         ->assertSee('Backend Engineering')
@@ -227,6 +228,7 @@ it('menerbitkan halaman CMS dinamis dan menampilkannya pada dropdown navigasi', 
     $this->get(route('pages.show', $publishedPage))
         ->assertSuccessful()
         ->assertSee('<title>Kebijakan Privasi — Naf Dreams</title>', false)
+        ->assertSee('<meta name="description" content="Penjelasan pengelolaan data pribadi.">', false)
         ->assertSee('Data yang dikumpulkan')
         ->assertSee('id="data-yang-dikumpulkan"', false);
 
