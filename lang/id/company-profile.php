@@ -182,6 +182,8 @@ return [
             'eyebrow' => 'Investasi pengembangan',
             'title' => 'Pilih titik awal yang sesuai dengan kebutuhan Anda',
             'description' => 'Harga berikut adalah estimasi awal. Ruang lingkup, prioritas, dan target bisnis akan dibahas bersama agar anggaran digunakan secara efektif.',
+            'contact_for_price' => 'Hubungi kami',
+            'contact_for_price_hint' => 'Hubungi tim kami untuk mendapatkan penawaran harga sesuai kebutuhan proyek Anda.',
             'recommended' => 'Paling populer',
             'custom_price' => 'Hubungi saya',
             'action' => 'Mulai konsultasi',

@@ -182,6 +182,8 @@ return [
             'eyebrow' => 'Development investment',
             'title' => 'Choose the right starting point for your needs',
             'description' => 'These prices are starting estimates. We will align the scope, priorities, and business outcomes so your budget is invested effectively.',
+            'contact_for_price' => 'Contact us',
+            'contact_for_price_hint' => 'Contact the team to get a custom quote based on your project requirements.',
             'recommended' => 'Most popular',
             'custom_price' => 'Let’s talk',
             'action' => 'Start a consultation',

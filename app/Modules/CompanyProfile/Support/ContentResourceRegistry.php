@@ -113,7 +113,7 @@ class ContentResourceRegistry
 
                 if (isset($field['source']) && $field['type'] === 'multiselect') {
                     [$model] = $field['source'];
-                    $fieldRules[$field['name'].'.*'] = [
+                    $fieldRules[$field['name'] . '.*'] = [
                         'integer',
                         Rule::exists((new $model)->getTable(), 'id'),
                     ];
@@ -332,6 +332,7 @@ class ContentResourceRegistry
                         'month' => 'Per bulan',
                         'year' => 'Per tahun',
                     ], ['required', 'string'], list: true),
+                    self::checkbox('is_contact_for_price', 'Sembunyikan harga & arahkan ke kontak developer'),
                     self::text('call_to_action_label', 'Label CTA', ['nullable', 'string', 'max:255']),
                     self::text('call_to_action_url', 'URL CTA', ['nullable', 'string', 'max:2048']),
                     self::multiselect('feature_ids', 'Keunggulan paket', Feature::class, 'title', 'features'),

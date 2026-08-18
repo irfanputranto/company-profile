@@ -15,9 +15,20 @@ class PricingPlan extends AuditableModel
 
     /** @var list<string> */
     protected $fillable = [
-        'profile_id', 'slug', 'title', 'tagline', 'description', 'price', 'currency',
-        'billing_period', 'call_to_action_label', 'call_to_action_url', 'sort_order',
-        'is_featured', 'is_active',
+        'profile_id',
+        'slug',
+        'title',
+        'tagline',
+        'description',
+        'price',
+        'currency',
+        'billing_period',
+        'is_contact_for_price',
+        'call_to_action_label',
+        'call_to_action_url',
+        'sort_order',
+        'is_featured',
+        'is_active',
     ];
 
     /** @return array<string, string> */
@@ -26,6 +37,7 @@ class PricingPlan extends AuditableModel
         return [
             'price' => 'decimal:2',
             'sort_order' => 'integer',
+            'is_contact_for_price' => 'boolean',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
         ];
