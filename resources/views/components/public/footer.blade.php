@@ -35,9 +35,7 @@
                 @if ($profile?->email)
                     <a class="break-all hover:text-[#078786]" href="mailto:{{ $profile->email }}">{{ $profile->email }}</a>
                 @endif
-                @if ($profile?->phone)
-                    <a class="hover:text-[#078786]" href="tel:{{ preg_replace('/[^0-9+]/', '', $profile->phone) }}">{{ $profile->phone }}</a>
-                @endif
+
                 @if ($profile?->location)
                     <span>{{ $profile->location }}</span>
                 @endif

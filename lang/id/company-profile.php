@@ -212,7 +212,7 @@ return [
             'message' => 'Halo, saya ingin berdiskusi mengenai kebutuhan aplikasi untuk bisnis saya.',
         ],
         'footer' => [
-            'description' => 'Company profile pribadi yang berfokus pada software engineering andal dan produk digital yang scalable.',
+            'description' => 'Merespons kebutuhan bisnis lewat software yang andal dan produk digital yang siap berkembang.',
             'navigation' => 'Navigasi',
             'services' => 'Layanan',
             'contact' => 'Kontak',

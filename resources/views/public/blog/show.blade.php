@@ -1,6 +1,7 @@
 @php
     $articleTitle = $article->translated('title');
     $articleDescription = $article->translated('excerpt') ?: $article->translated('content');
+    $articleExcerpt = $article->translated('excerpt');
     $categoryName = $article->category?->translated('name') ?? __('company-profile.public.blog.category_fallback');
     $authorName = $profile?->user_id === $article->author_id
         ? $profile->public_name

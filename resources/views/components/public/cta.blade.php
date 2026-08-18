@@ -17,11 +17,6 @@
                     {{ $whatsappUrl ? __('company-profile.public.whatsapp.action') : __('company-profile.public.cta.action') }}
                     <span class="{{ $whatsappUrl ? 'icon-[tabler--brand-whatsapp]' : 'icon-[tabler--mail]' }} size-5"></span>
                 </a>
-                @if ($profile?->phone)
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $profile->phone) }}" class="btn btn-outline rounded-full px-7">
-                        <span class="icon-[tabler--phone] size-5"></span>{{ $profile->phone }}
-                    </a>
-                @endif
             </div>
         </div>
     </div>

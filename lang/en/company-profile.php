@@ -212,7 +212,7 @@ return [
             'message' => 'Hello, I would like to discuss an application for my business.',
         ],
         'footer' => [
-            'description' => 'Personal company profile focused on dependable software engineering and scalable digital products.',
+            'description' => 'Addressing business needs with dependable software and digital products built to grow.',
             'navigation' => 'Navigation',
             'services' => 'Services',
             'contact' => 'Contact',
