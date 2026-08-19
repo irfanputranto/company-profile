@@ -447,7 +447,7 @@ class ContentResourceRegistry
                     self::text('title', 'Judul', ['required', 'string', 'max:255'], list: true),
                     self::text('slug', 'Slug', ['nullable', 'string', 'max:255'], unique: 'slug'),
                     self::textarea('excerpt', 'Ringkasan', ['nullable', 'string', 'max:2000'], list: true),
-                    self::textarea('content', 'Konten', ['required', 'string']),
+                    self::richtext('content', 'Konten', ['required', 'string']),
                     self::multiselect('tag_ids', 'Tag artikel', Tag::class, 'name', 'tags'),
                     self::selectChoices('status', 'Status', $publicationStatus, ['required', 'string'], list: true),
                     $featured,
@@ -568,6 +568,14 @@ class ContentResourceRegistry
     private static function textarea(string $name, string $label, array $rules, bool $list = false): array
     {
         return self::field($name, $label, 'textarea', $rules, $list, wide: true);
+    }
+
+    /** @param array<int, mixed> $rules
+     * @return array<string, mixed>
+     */
+    private static function richtext(string $name, string $label, array $rules, bool $list = false): array
+    {
+        return self::field($name, $label, 'richtext', $rules, $list, wide: true);
     }
 
     /** @param array<int, mixed> $rules

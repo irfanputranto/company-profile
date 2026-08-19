@@ -27,6 +27,9 @@ class Media extends AuditableModel
         'deleted_by',
     ];
 
+    /** @var list<string> */
+    protected $appends = ['public_url'];
+
     /** @return array<string, string> */
     protected function casts(): array
     {
@@ -51,5 +54,11 @@ class Media extends AuditableModel
     public function publicUrl(): string
     {
         return Storage::disk($this->disk)->url($this->path);
+    }
+
+    /** @return string */
+    public function getPublicUrlAttribute(): string
+    {
+        return $this->publicUrl();
     }
 }

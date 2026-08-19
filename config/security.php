@@ -4,7 +4,7 @@ $applicationHost = parse_url((string) config('app.url', 'http://localhost'), PHP
 $trustedHosts = array_filter(array_map('trim', explode(',', (string) env('TRUSTED_HOSTS', $applicationHost))));
 $trustedProxies = array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', ''))));
 $isLocal = config('app.env', 'production') === 'local';
-$trustedImageSources = trim((string) env('SECURITY_CSP_IMAGE_SOURCES', 'https://cdn.flyonui.com'));
+$trustedImageSources = trim((string) env('SECURITY_CSP_IMAGE_SOURCES', 'https://cdn.flyonui.com https://sp.tinymce.com'));
 $trustedScriptSources = trim((string) env(
     'SECURITY_CSP_SCRIPT_SOURCES',
     'https://cdn.jsdelivr.net https://static.cloudflareinsights.com',

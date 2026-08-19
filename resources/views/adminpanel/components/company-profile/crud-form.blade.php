@@ -78,6 +78,17 @@
                     <textarea id="{{ $name }}" name="{{ $name }}" rows="{{ $field['type'] === 'json' ? 7 : 5 }}"
                         class="textarea mt-2 w-full font-{{ $field['type'] === 'json' ? 'mono' : 'sans' }} @error($name) textarea-error @enderror"
                         @required($isRequired)>{{ $value }}</textarea>
+                @elseif ($field['type'] === 'richtext')
+                    <textarea id="{{ $name }}" name="{{ $name }}" rows="14"
+                        data-richtext-editor="1"
+                        class="tinymce-editor textarea mt-2 w-full @error($name) textarea-error @enderror"
+                        @required($isRequired)>{{ $value }}</textarea>
+                    @once
+                        <script>
+                            window.tinymceUploadUrl = '{{ route("company-profile.media.store") }}';
+                        </script>
+                        @vite('resources/js/tinymce-init.js')
+                    @endonce
                 @else
                     <input id="{{ $name }}" name="{{ $name }}" type="{{ $field['type'] }}"
                         value="{{ $value }}" step="{{ $field['step'] ?? null }}"
